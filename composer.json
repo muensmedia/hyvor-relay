@@ -39,7 +39,7 @@
     "scripts": {
         "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
         "test": "vendor/bin/pest",
-        "test-coverage": "vendor/bin/pest --coverage"
+        "test-coverage": "vendor/bin/pest --coverage --configuration phpunit.coverage.xml.dist"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
