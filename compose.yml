@@ -3,3 +3,5 @@ services:
     image: wodby/php:8.5
     volumes:
       - ./:/var/www/html
+    env_file:
+      - .env

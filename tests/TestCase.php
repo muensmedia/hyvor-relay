@@ -25,7 +25,7 @@ class TestCase extends Orchestra
             ->give([]);
     }
 
-    protected function getPackageProviders($app)
+    protected function getPackageProviders($app): array
     {
         return [
             LaravelDataServiceProvider::class,
@@ -34,10 +34,13 @@ class TestCase extends Orchestra
         ];
     }
 
-    public function getEnvironmentSetUp($app)
+    public function getEnvironmentSetUp($app): void
     {
         config()->set('database.default', 'testing');
-
+        config()->set('mail.default', 'hyvor');
+        config()->set('mail.mailers.hyvor', [
+            'transport' => 'hyvor-relay',
+        ]);
         /*
         $migration = include __DIR__.'/../database/migrations/create_hyvor_relay_table.php.stub';
         $migration->up();
