@@ -20,7 +20,6 @@ class HyvorMailable extends Mailable
     public function content(): Content
     {
         return new Content(
-            text: $this->plainText,
             htmlString: $this->htmlString,
         );
     }
