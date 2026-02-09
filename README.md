@@ -40,7 +40,7 @@ composer config gitlab-domains "git.muensmedia.de"
 3. Add the Composer repository for this project:
 
 ```bash
-composer config repositories.muensmedia-hyvor-relay composer https://git.muensmedia.de/api/v4/projects/mm%2Fhyvor-relay-laravel/packages/composer/packages.json
+composer config <to-be-added>
 ```
 
 4. Require the package:
@@ -54,17 +54,6 @@ composer require muensmedia/hyvor-relay
 ```bash
 php artisan vendor:publish --tag=hyvor-relay-config
 ```
-
-Notes:
-
-- Prefer setting the token globally if you use multiple private packages:
-
-```bash
-composer config --global gitlab-token.git.muensmedia.de <YOUR_GITLAB_TOKEN>
-composer config --global gitlab-domains "git.muensmedia.de"
-```
-
-- Avoid committing real tokens. If you commit an `auth.json`, treat it as a secret.
 
 ## ⚙️ Configuration
 
