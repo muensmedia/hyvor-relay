@@ -60,7 +60,7 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
         } catch (DecodingExceptionInterface) {
             throw new HttpTransportException('Unable to send an email: ' . $response->getContent(false) . sprintf(' (code %d).', $statusCode), $response);
         } catch (TransportExceptionInterface $e) {
-            throw new HttpTransportException('Could not reach the remote Sendinblue server.', $response, 0, $e);
+            throw new HttpTransportException('Could not reach the remote Hyvor Relay server.', $response, 0, $e);
         }
 
         throw_if(
