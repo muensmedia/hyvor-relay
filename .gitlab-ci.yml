@@ -1,0 +1,49 @@
+include:
+  - project: 'muensmedia-docker/gitlab-ci-recipes'
+    file:
+      - '/package_manager/.composer.yml'
+
+unit tests php8.5:
+  extends:
+    - .composer-install
+  variables:
+    PHP_VERSION: '8.5'
+    FOLDER_TO_RUN_COMPOSER: './'
+    COMPOSER_FOLDER: './vendor/'
+    COMPOSER_PARAMETERS: '--optimize-autoloader --no-interaction'
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}-85
+    paths:
+      - ${COMPOSER_FOLDER}
+  script:
+    - !reference [.composer-install, script]
+    - ./vendor/bin/pest --compact --profile
+  artifacts:
+    when: always
+    paths:
+      - build/report.junit.xml
+    reports:
+      junit: build/report.junit.xml
+
+# Publish a tag (version) or branch to Composer Packages of the current project
+publish:
+  stage: deploy
+  image: curlimages/curl:latest
+  variables:
+    URL: "$CI_SERVER_PROTOCOL://$CI_SERVER_HOST:$CI_SERVER_PORT/api/v4/projects/$CI_PROJECT_ID/packages/composer?job_token=$CI_JOB_TOKEN"
+  needs:
+    - unit tests php8.5
+  script:
+    - version=$([[ -z "$CI_COMMIT_TAG" ]] && echo "branch=$CI_COMMIT_REF_NAME" || echo "tag=$CI_COMMIT_TAG")
+    - 'echo "Deploying package version: $version"'
+    - insecure=$([ "$CI_SERVER_PROTOCOL" = "http" ] && echo "--insecure" || echo "")
+    - response=$(curl -s -w "\n%{http_code}" $insecure --data $version $URL)
+    - code=$(echo "$response" | tail -n 1)
+    - body=$(echo "$response" | head -n 1)
+    # Output state information
+    - if [ $code -eq 201 ]; then
+      echo "Package created - Code $code - $body";
+      else
+      echo "Could not create package - Code $code - $body";
+      exit 1;
+      fi
