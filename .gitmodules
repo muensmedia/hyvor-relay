@@ -1,0 +1,3 @@
+[submodule "tools"]
+	path = tools
+	url = ssh://git@git.muensmedia.de:10022/muensmedia-docker/docker-helpers.git

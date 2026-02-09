@@ -1,0 +1,5 @@
+services:
+  php:
+    image: wodby/php:8.5
+    volumes:
+      - ./:/var/www/html
