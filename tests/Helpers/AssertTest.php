@@ -4,16 +4,26 @@ use Illuminate\Support\Facades\Mail;
 use Muensmedia\HyvorRelay\Mailable\HyvorMailable;
 use Muensmedia\HyvorRelay\Transport\HyvorRelayApiTransport;
 
-it('should send mail with hyvor-relay transport', function () {
+it('uses hyvor-relay transport', function () {
     $transport = Mail::mailer()->getSymfonyTransport();
     expect($transport)->toBeInstanceOf(HyvorRelayApiTransport::class);
+});
 
-    $mailable = Mail::send(
-        new HyvorMailable('<html><body>HTML String</body></html>', 'Plain String')
-            ->to('i.schlenther@muensmedia.de')
-            ->subject('Test Mail')
-            ->from('test@beyond-phishing.dev')
-    );
+it('should send mail without actually sending it (Mail fake)', function () {
+    Mail::fake();
 
-    expect($mailable)->toBeInstanceOf(HyvorMailable::class);
+    $mailable = new HyvorMailable('<html lang="de"><body>HTML String</body></html>', 'Plain String')
+        ->to('i.schlenther@muensmedia.de')
+        ->subject('Test Mail')
+        ->from('test@beyond-phishing.dev');
+
+    Mail::send($mailable);
+
+    Mail::assertSent(HyvorMailable::class, function (HyvorMailable $mail) {
+        return $mail->hasTo('i.schlenther@muensmedia.de')
+            && $mail->hasFrom('test@beyond-phishing.dev')
+            && $mail->subject === 'Test Mail'
+            && $mail->htmlString === '<html lang="de"><body>HTML String</body></html>'
+            && $mail->plainText === 'Plain String';
+    });
 });

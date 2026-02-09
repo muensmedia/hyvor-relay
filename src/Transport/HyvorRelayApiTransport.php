@@ -29,7 +29,7 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
 {
     private string $key;
 
-    public function __construct(string $key, HttpClientInterface $client = null, EventDispatcherInterface $dispatcher = null, LoggerInterface $logger = null)
+    public function __construct(string $key, HttpClientInterface|null $client = null, EventDispatcherInterface|null $dispatcher = null, LoggerInterface|null $logger = null)
     {
         $this->key = $key;
         parent::__construct($client, $dispatcher, $logger);
@@ -63,13 +63,29 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
             throw new HttpTransportException('Could not reach the remote Hyvor Relay server.', $response, 0, $e);
         }
 
+        // Hyvor Relay responds with 200 on success (some APIs use 201). Treat any 2xx as success.
+        $ok = $statusCode >= 200 && $statusCode < 300;
+        $errorMessage = Arr::get($result, 'message')
+            ?? Arr::get($result, 'error')
+            ?? Arr::get($result, 'errors')
+            ?? '';
+        if ($errorMessage === '') {
+            // Avoid throwing "Unable to send an email:  (code ...)" on error responses without a message.
+            $errorMessage = trim((string) $response->getContent(false));
+        }
+
         throw_if(
-            201 !== $statusCode,
+            !$ok,
             HttpTransportException::class,
-            'Unable to send an email: ' . Arr::get($result, 'message', '') . sprintf(' (code %d).', $statusCode), $response
+            'Unable to send an email: ' . $errorMessage . sprintf(' (code %d).', $statusCode),
+            $response
         );
 
-        $sentMessage->setMessageId(Arr::get($result, 'messageId', ''));
+        $messageId = Arr::get($result, 'messageId')
+            ?? Arr::get($result, 'message_id')
+            ?? Arr::get($result, 'id')
+            ?? '';
+        $sentMessage->setMessageId((string) $messageId);
 
         return $response;
     }
