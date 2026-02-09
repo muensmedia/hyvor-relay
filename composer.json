@@ -9,7 +9,14 @@
         "spatie/laravel-data": "^4.19",
         "symfony/http-client": "^8.0",
         "guzzlehttp/guzzle": "^7.10",
-        "laravel/framework": "^12.50"
+        "laravel/framework": "^12.50",
+        "laravel/tinker": "^2.11"
+    },
+    "require-dev": {
+        "orchestra/testbench": "^10.9",
+        "pestphp/pest": "^4.3",
+        "pestphp/pest-plugin-arch": "^4.0",
+        "pestphp/pest-plugin-laravel": "^4.0"
     },
     "license": "MIT",
     "autoload": {
@@ -17,10 +24,34 @@
             "Muensmedia\\HyvorRelay\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "Muensmedia\\HyvorRelay\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Muensmedia\\HyvorRelay\\HyvorRelayServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "post-autoload-dump": "@php ./vendor/bin/testbench package:discover --ansi",
+        "test": "vendor/bin/pest",
+        "test-coverage": "vendor/bin/pest --coverage"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
     "authors": [
         {
             "name": "Iven Schlenther",
             "email": "i.schlenther@muensmedia.de"
         }
-    ]
+    ],
+    "config": {
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    }
 }

@@ -1,8 +1,12 @@
 <?php
 
+namespace Muensmedia\HyvorRelay;
+
+use Illuminate\Support\Facades\Mail;
+use Muensmedia\HyvorRelay\Transport\HyvorRelayTransportFactory;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use Illuminate\Support\Facades\Mail;
+use Symfony\Component\Mailer\Transport\Dsn;
 
 class HyvorRelayServiceProvider extends PackageServiceProvider
 {
@@ -17,9 +21,13 @@ class HyvorRelayServiceProvider extends PackageServiceProvider
     public function bootingPackage(): void
     {
         Mail::extend('hyvor-relay', function () {
-            // Here you would return an instance of your custom mail transport
-            // For example:
-            // return new HyvorRelayTransport(config('hyvor-relay.api_key'));
+            return new HyvorRelayTransportFactory()->create(
+                new Dsn(
+                    'hyvor+api',
+                    'default',
+                    config('hyvor-relay.api_key')
+                )
+            );
         });
     }
 }

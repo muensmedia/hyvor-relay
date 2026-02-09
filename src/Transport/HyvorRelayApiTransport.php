@@ -2,7 +2,7 @@
 
 // original file: https://github.com/symfony/sendinblue-mailer/blob/6.3/Transport/SendinblueApiTransport.php
 
-namespace Transport;
+namespace Muensmedia\HyvorRelay\Transport;
 
 use Illuminate\Support\Arr;
 use Psr\EventDispatcher\EventDispatcherInterface;
