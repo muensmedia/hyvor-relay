@@ -47,10 +47,10 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
 
     protected function doSendApi(SentMessage $sentMessage, Email $email, Envelope $envelope): ResponseInterface
     {
-        $response = $this->client->request('POST', $this->getSendUrl(), [
+        $response = $this->client->request('POST', $this->getEndpoint() . '/api/console/sends', [
             'json' => $this->getPayload($email, $envelope),
             'headers' => [
-                'api-key' => $this->key,
+                'Authorization' => 'Bearer '.$this->key,
             ],
         ]);
 
