@@ -2,17 +2,7 @@
 
 Laravel package that adds a custom mail transport (`hyvor-relay`) to send emails through a Hyvor Relay endpoint (Hyvor-hosted or self-hosted).
 
-## 🔎 Contents
-
-- What You Get
-- Requirements
-- Installation (Private GitLab / muensmedia)
-- Configuration
-- Usage
-- How The Transport Works
-- Quick Test Mailable (Optional)
-- Local Development (This Repo)
-- Troubleshooting
+__[TOC]__
 
 ## ✨ What You Get
 
