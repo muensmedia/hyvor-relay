@@ -69,7 +69,7 @@ test('payload includes body_text when email has a text part', function () {
     $getHeader = function (string $name) use ($captured) {
         $headers = Arr::get($captured, 'options.headers', []);
         if (! is_array($headers)) {
-            return;
+            return null;
         }
 
         if (array_is_list($headers)) {
@@ -84,7 +84,7 @@ test('payload includes body_text when email has a text part', function () {
                 }
             }
 
-            return;
+            return null;
         }
 
         return $headers[$name] ?? $headers[strtolower($name)] ?? null;
@@ -274,7 +274,7 @@ test('idempotency header is removed from the email and only sent when non-empty'
     $getHeader = function (string $name) use ($captured) {
         $headers = Arr::get($captured, 'options.headers', []);
         if (! is_array($headers)) {
-            return;
+            return null;
         }
 
         if (array_is_list($headers)) {
@@ -289,7 +289,7 @@ test('idempotency header is removed from the email and only sent when non-empty'
                 }
             }
 
-            return;
+            return null;
         }
 
         return $headers[$name] ?? $headers[strtolower($name)] ?? null;

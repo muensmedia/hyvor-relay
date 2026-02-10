@@ -4,7 +4,7 @@
     "vendor"
   ],
   "rules": {
-    "simplified_null_return": true,
+    "simplified_null_return": false,
     "array_indentation": false,
     "new_expression_parentheses": false,
     "new_with_braces": {
