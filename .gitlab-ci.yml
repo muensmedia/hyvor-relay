@@ -21,6 +21,7 @@ pint:
     paths:
       - ${COMPOSER_FOLDER}
   only:
+    - main
     - merge_requests
   script:
     - !reference [.composer-install, script]
@@ -39,6 +40,10 @@ unit tests php8.5:
     key: ${CI_COMMIT_REF_SLUG}-85
     paths:
       - ${COMPOSER_FOLDER}
+  only:
+    - branches
+    - merge_requests
+    - tags
   script:
     - !reference [.composer-install, script]
     - ./vendor/bin/pest --compact --profile
@@ -54,6 +59,9 @@ publish:
   image: curlimages/curl:latest
   variables:
     URL: "$CI_SERVER_PROTOCOL://$CI_SERVER_HOST:$CI_SERVER_PORT/api/v4/projects/$CI_PROJECT_ID/packages/composer?job_token=$CI_JOB_TOKEN"
+  only:
+    - main
+    - tags
   needs:
     - unit tests php8.5
   script:
