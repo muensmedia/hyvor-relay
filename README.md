@@ -149,6 +149,18 @@ docker compose exec php php ./vendor/bin/pest
 docker compose exec php php ./vendor/bin/pest --compact --profile
 ```
 
+Run Pint (code style):
+
+```bash
+docker compose exec php php ./vendor/bin/pint
+```
+
+Check formatting only (used in CI, no changes will be applied):
+
+```bash
+docker compose exec php php ./vendor/bin/pint --test
+```
+
 Optional coverage (requires Xdebug or PCOV inside the PHP runtime):
 
 ```bash
