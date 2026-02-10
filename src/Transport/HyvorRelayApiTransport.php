@@ -1,6 +1,9 @@
 <?php
 
-// original file: https://github.com/symfony/sendinblue-mailer/blob/6.3/Transport/SendinblueApiTransport.php
+/*
+ * Derived from symfony/sendinblue-mailer (MIT).
+ * See THIRD_PARTY_NOTICES.md for the applicable copyright and license text.
+ */
 
 namespace Muensmedia\HyvorRelay\Transport;
 
@@ -22,9 +25,6 @@ use Symfony\Contracts\HttpClient\Exception\TransportExceptionInterface;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
 use Symfony\Contracts\HttpClient\ResponseInterface;
 
-/**
- * @author Yann LUCAS
- */
 final class HyvorRelayApiTransport extends AbstractApiTransport
 {
     private string $key;
@@ -81,10 +81,16 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
             $response
         );
 
-        $messageId = Arr::get($result, 'messageId')
-            ?? Arr::get($result, 'message_id')
-            ?? Arr::get($result, 'id')
-            ?? '';
+        // Hyvor Relay Console API (POST /sends) responds with:
+        // { "id": number, "message_id": string }
+        $messageId = Arr::get($result, 'message_id');
+        if (!is_scalar($messageId) || (string) $messageId === '') {
+            throw new HttpTransportException(
+                'Unable to send an email: unexpected API response (missing "message_id").' . sprintf(' (code %d).', $statusCode),
+                $response
+            );
+        }
+
         $sentMessage->setMessageId((string) $messageId);
 
         return $response;

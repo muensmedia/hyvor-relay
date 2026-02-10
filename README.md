@@ -1,14 +1,14 @@
-# Hyvor Relay (Laravel Mail Transport)
+# Hyvor Relay (Laravel mail transport)
 
-Laravel package that adds a custom mail transport (`hyvor-relay`) to send emails through a Hyvor Relay endpoint (Hyvor-hosted or self-hosted).
+A Laravel package that adds a custom mail transport (`hyvor-relay`) to send emails through a Hyvor Relay endpoint (Hyvor-hosted or self-hosted).
 
 __[TOC]__
 
-## What You Get
+## What you get
 
 - A Laravel mail transport driver: `hyvor-relay`
 - Simple `.env` configuration (`HYVOR_RELAY_API_KEY`, `HYVOR_RELAY_ENDPOINT`)
-- Set Hyvor Relay as the default mailer, or keep your default (SMTP, SES, etc.) and use Hyvor only for specific mails
+- Set Hyvor Relay as the default mailer, or keep your default (SMTP, SES, etc.) and use Hyvor only for specific emails
 
 ## Requirements
 
@@ -46,7 +46,7 @@ Notes:
 
 The package registers a mail transport driver named `hyvor-relay`. To use it, configure a Laravel mailer that uses this transport.
 
-### Option A: Use Hyvor Relay As The Default Mailer
+### Option A: use Hyvor Relay as the default mailer
 
 `config/mail.php`:
 
@@ -66,7 +66,7 @@ The package registers a mail transport driver named `hyvor-relay`. To use it, co
 MAIL_MAILER=hyvor
 ```
 
-Now any Laravel mail send will go through Hyvor Relay:
+Now any mail sent by Laravel will go through Hyvor Relay:
 
 ```php
 use Illuminate\Support\Facades\Mail;
@@ -74,7 +74,7 @@ use Illuminate\Support\Facades\Mail;
 Mail::to('user@example.com')->send(new \App\Mail\WelcomeMail());
 ```
 
-### Option B: Keep Your Default Mailer, Use Hyvor Only Where Needed
+### Option B: keep your default mailer, use Hyvor only where needed
 
 If your app default mailer is something else (for example `smtp`), you can still keep a dedicated `hyvor` mailer and use it only for specific emails.
 
@@ -111,7 +111,7 @@ Mail::mailer('hyvor')
     ->send(new \App\Mail\WelcomeMail());
 ```
 
-## Local Development (This Repo)
+## Local development (this repo)
 
 This repository includes a minimal Docker setup (PHP 8.5 container).
 

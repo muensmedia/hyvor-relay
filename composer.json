@@ -16,7 +16,8 @@
         "orchestra/testbench": "^10.9",
         "pestphp/pest": "^4.3",
         "pestphp/pest-plugin-arch": "^4.0",
-        "pestphp/pest-plugin-laravel": "^4.0"
+        "pestphp/pest-plugin-laravel": "^4.0",
+        "laravel/pint": "^1.27"
     },
     "license": "MIT",
     "autoload": {
