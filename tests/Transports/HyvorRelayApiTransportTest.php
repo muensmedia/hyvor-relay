@@ -2,15 +2,15 @@
 
 use Illuminate\Support\Arr;
 use Muensmedia\HyvorRelay\Transport\HyvorRelayApiTransport;
+use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Component\HttpClient\MockHttpClient;
 use Symfony\Component\HttpClient\Response\MockResponse;
 use Symfony\Component\Mailer\Envelope;
 use Symfony\Component\Mailer\Exception\HttpTransportException;
+use Symfony\Component\Mailer\Header\TagHeader;
 use Symfony\Component\Mime\Address;
 use Symfony\Component\Mime\Email;
-use Symfony\Component\HttpClient\Exception\TransportException;
 use Symfony\Contracts\HttpClient\ResponseInterface;
-use Symfony\Component\Mailer\Header\TagHeader;
 
 test('stringifyAddress uses IDN converted domains', function () {
     // prepare
@@ -69,7 +69,7 @@ test('payload includes body_text when email has a text part', function () {
     $getHeader = function (string $name) use ($captured) {
         $headers = Arr::get($captured, 'options.headers', []);
         if (! is_array($headers)) {
-            return null;
+            return;
         }
 
         if (array_is_list($headers)) {
@@ -84,7 +84,7 @@ test('payload includes body_text when email has a text part', function () {
                 }
             }
 
-            return null;
+            return;
         }
 
         return $headers[$name] ?? $headers[strtolower($name)] ?? null;
@@ -274,7 +274,7 @@ test('idempotency header is removed from the email and only sent when non-empty'
     $getHeader = function (string $name) use ($captured) {
         $headers = Arr::get($captured, 'options.headers', []);
         if (! is_array($headers)) {
-            return null;
+            return;
         }
 
         if (array_is_list($headers)) {
@@ -289,7 +289,7 @@ test('idempotency header is removed from the email and only sent when non-empty'
                 }
             }
 
-            return null;
+            return;
         }
 
         return $headers[$name] ?? $headers[strtolower($name)] ?? null;
@@ -437,7 +437,8 @@ test('wraps decoding exceptions as HttpTransportException with response content'
 
 test('wraps transport exceptions as HttpTransportException', function () {
     $client = new MockHttpClient(function () {
-        return new class implements ResponseInterface {
+        return new class() implements ResponseInterface
+        {
             public function getStatusCode(): int
             {
                 throw new TransportException('boom');
@@ -458,9 +459,7 @@ test('wraps transport exceptions as HttpTransportException', function () {
                 return [];
             }
 
-            public function cancel(): void
-            {
-            }
+            public function cancel(): void {}
 
             public function getInfo(?string $type = null): mixed
             {

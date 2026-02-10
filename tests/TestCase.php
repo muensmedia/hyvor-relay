@@ -2,7 +2,6 @@
 
 namespace Muensmedia\HyvorRelay\Tests;
 
-use Illuminate\Database\Eloquent\Factories\Factory;
 use Lorisleiva\Actions\ActionServiceProvider;
 use Muensmedia\HyvorRelay\HyvorRelayServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
