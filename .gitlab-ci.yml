@@ -41,7 +41,6 @@ unit tests php8.5:
     paths:
       - ${COMPOSER_FOLDER}
   only:
-    - branches
     - merge_requests
     - tags
   script:
