@@ -9,10 +9,10 @@
         "spatie/laravel-data": "^4.19",
         "symfony/http-client": "^8.0",
         "guzzlehttp/guzzle": "^7.10",
-        "laravel/framework": "^12",
-        "laravel/tinker": "^2.11"
+        "laravel/framework": "^12"
     },
     "require-dev": {
+        "laravel/tinker": "^2.11",
         "orchestra/testbench": "^10.9",
         "pestphp/pest": "^4.3",
         "pestphp/pest-plugin-arch": "^4.0",

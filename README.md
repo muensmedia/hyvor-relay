@@ -113,7 +113,7 @@ Mail::mailer('hyvor')
 
 ## Local Development (This Repo)
 
-This repository includes a minimal Docker setup (PHP 8.5 container) and helper scripts in `tools/`.
+This repository includes a minimal Docker setup (PHP 8.5 container).
 
 Requirements:
 
@@ -124,20 +124,20 @@ Setup:
 ```bash
 cp .env.example .env
 docker compose up -d
-./tools/composer install
+docker compose exec php composer install
 ```
 
 Run tests:
 
 ```bash
-./tools/php ./vendor/bin/pest
-./tools/php ./vendor/bin/pest --compact --profile
+docker compose exec php php ./vendor/bin/pest
+docker compose exec php php ./vendor/bin/pest --compact --profile
 ```
 
 Optional coverage (requires Xdebug or PCOV inside the PHP runtime):
 
 ```bash
-./tools/php ./vendor/bin/pest --coverage --configuration phpunit.coverage.xml.dist
+docker compose exec php php ./vendor/bin/pest --coverage --configuration phpunit.coverage.xml.dist
 ```
 
 ## Troubleshooting
