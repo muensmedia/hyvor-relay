@@ -129,7 +129,7 @@ test('payload normalizes addresses, includes reply-to, custom headers, tag heade
 
     $transport = new HyvorRelayApiTransport('k', $client);
 
-    $email = (new Email())
+    $email = new Email()
         ->from(new Address('from@example.com', 'From Name'))
         ->to(new Address('to1@example.com', 'To One'), 'to2@example.com')
         ->cc('cc@example.com')
@@ -195,7 +195,7 @@ test('payload uses list form when there are multiple recipients', function () {
 
     $transport = new HyvorRelayApiTransport('k', $client);
 
-    $email = (new Email())
+    $email = new Email()
         ->from('from@example.com')
         ->to(new Address('a@example.com', 'A'), new Address('b@example.com', 'B'))
         ->html('<p>Hi</p>');
@@ -230,7 +230,7 @@ test('reply-to is added even when there are no other custom headers', function (
 
     $transport = new HyvorRelayApiTransport('k', $client);
 
-    $email = (new Email())
+    $email = new Email()
         ->from('from@example.com')
         ->to('to@example.com')
         ->replyTo('reply@example.com')
@@ -263,7 +263,7 @@ test('idempotency header is removed from the email and only sent when non-empty'
 
     $transport = new HyvorRelayApiTransport('k', $client);
 
-    $email = (new Email())
+    $email = new Email()
         ->from('from@example.com')
         ->to('to@example.com')
         ->html('<p>Hi</p>');
@@ -302,7 +302,7 @@ test('idempotency header is removed from the email and only sent when non-empty'
 test('getIdempotencyKey removes the header and returns null for whitespace', function () {
     $transport = new HyvorRelayApiTransport('k');
 
-    $email = (new Email())
+    $email = new Email()
         ->from('from@example.com')
         ->to('to@example.com')
         ->html('<p>Hi</p>');
@@ -334,7 +334,7 @@ test('subject "default" is not sent in payload', function () {
 
     $transport = new HyvorRelayApiTransport('k', $client);
 
-    $email = (new Email())
+    $email = new Email()
         ->from('from@example.com')
         ->to('to@example.com')
         ->subject('default')
@@ -371,7 +371,7 @@ test('throws when API responds with non-2xx and message, error, errors, or no me
         });
 
         $transport = new HyvorRelayApiTransport('k', $client);
-        $email = (new Email())->from('from@example.com')->to('to@example.com')->html('<p>Hi</p>');
+        $email = new Email()->from('from@example.com')->to('to@example.com')->html('<p>Hi</p>');
 
         try {
             $transport->send($email);
@@ -401,7 +401,7 @@ test('throws when API response is success but missing or invalid message_id', fu
         });
 
         $transport = new HyvorRelayApiTransport('k', $client);
-        $email = (new Email())->from('from@example.com')->to('to@example.com')->html('<p>Hi</p>');
+        $email = new Email()->from('from@example.com')->to('to@example.com')->html('<p>Hi</p>');
 
         try {
             $transport->send($email);
@@ -424,7 +424,7 @@ test('wraps decoding exceptions as HttpTransportException with response content'
     });
 
     $transport = new HyvorRelayApiTransport('k', $client);
-    $email = (new Email())->from('from@example.com')->to('to@example.com')->html('<p>Hi</p>');
+    $email = new Email()->from('from@example.com')->to('to@example.com')->html('<p>Hi</p>');
 
     try {
         $transport->send($email);
@@ -470,7 +470,7 @@ test('wraps transport exceptions as HttpTransportException', function () {
     });
 
     $transport = new HyvorRelayApiTransport('k', $client);
-    $email = (new Email())->from('from@example.com')->to('to@example.com')->html('<p>Hi</p>');
+    $email = new Email()->from('from@example.com')->to('to@example.com')->html('<p>Hi</p>');
 
     try {
         $transport->send($email);
