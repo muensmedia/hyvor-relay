@@ -178,26 +178,10 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
                 case $header instanceof TagHeader:
                     $headersAndTags['tags'][] = $header->getValue();
                     break;
-                case $header instanceof MetadataHeader:
-                    // does not work at the moment
-                    $headersAndTags['headers']['X-Mailin-'.$header->getKey()] = $header->getValue();
-                    break;
-                case $name === 'templateid':
-                    $headersAndTags[$header->getName()] = (int) $header->getValue();
-                    // cast it to string as brevo does not accept an integer as custom header value
-                    $headersAndTags['headers']['X-Mailin-Template-Id'] = ''.(int) $header->getValue();
-                    break;
-                case $name === 'params':
-                    $headersAndTags[$header->getName()] = json_decode($header->getValue(), true);
-                    break;
                 default:
                     $headersAndTags['headers'][$header->getName()] = $header->getBodyAsString();
             }
 
-        }
-
-        if (Arr::get($headersAndTags, 'headers.X-Mailin-Custom', false)) {
-            $headersAndTags['headers']['X-Mailin-Custom'] = print_r($headersAndTags['headers']['X-Mailin-Custom'], true);
         }
 
         return $headersAndTags;
