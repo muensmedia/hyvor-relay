@@ -25,8 +25,6 @@ test('stringifyAddress uses IDN converted domains', function () {
 });
 
 test('payload includes body_text when email has a text part', function () {
-    config()->set('hyvor-relay.endpoint', 'https://relay.hyvor.com');
-
     $captured = null;
     $client = new MockHttpClient(function (string $method, string $url, array $options) use (&$captured) {
         $captured = compact('method', 'url', 'options');
@@ -48,31 +46,51 @@ test('payload includes body_text when email has a text part', function () {
         ->subject('Subject')
         ->html('<p>Hello</p>')
         ->text('Hello (plain)');
+    $email->getHeaders()->addTextHeader('X-Idempotency-Key', 'welcome-email-123');
 
     $sentMessage = $transport->send($email);
 
-    $headers = Arr::get($captured, 'options.headers', []);
-    $authorization = null;
-    if (is_array($headers) && array_is_list($headers)) {
-        foreach ($headers as $headerLine) {
-            if (! is_string($headerLine)) {
-                continue;
+    $payload = Arr::get($captured, 'options.json');
+    if ($payload === null) {
+        // Symfony HttpClient may normalize the "json" option into a JSON-encoded "body".
+        $body = Arr::get($captured, 'options.body');
+        if (is_string($body)) {
+            $payload = json_decode($body, true);
+        } elseif (is_array($body)) {
+            $payload = $body;
+        }
+    }
+
+    $getHeader = function (string $name) use ($captured) {
+        $headers = Arr::get($captured, 'options.headers', []);
+        if (! is_array($headers)) {
+            return null;
+        }
+
+        if (array_is_list($headers)) {
+            foreach ($headers as $headerLine) {
+                if (! is_string($headerLine)) {
+                    continue;
+                }
+
+                $prefix = strtolower($name).':';
+                if (strtolower(substr($headerLine, 0, strlen($prefix))) === $prefix) {
+                    return trim(substr($headerLine, strlen($prefix)));
+                }
             }
 
-            if (stripos($headerLine, 'authorization:') === 0) {
-                $authorization = trim(substr($headerLine, strlen('authorization:')));
-                break;
-            }
+            return null;
         }
-    } elseif (is_array($headers)) {
-        $authorization = $headers['Authorization'] ?? $headers['authorization'] ?? null;
-    }
+
+        return $headers[$name] ?? $headers[strtolower($name)] ?? null;
+    };
 
     expect($captured)->not->toBeNull()
         ->and($captured['method'])->toBe('POST')
-        ->and($captured['url'])->toBe('https://relay.hyvor.com/api/console/sends')
-        ->and($authorization)->toBe('Bearer 12345')
-        ->and(Arr::get($captured, 'options.json.body_html'))->toBe('<p>Hello</p>')
-        ->and(Arr::get($captured, 'options.json.body_text'))->toBe('Hello (plain)')
+        ->and($captured['url'])->toBe(config('hyvor-relay.endpoint').'/api/console/sends')
+        ->and($getHeader('Authorization'))->toBe('Bearer 12345')
+        ->and($getHeader('X-Idempotency-Key'))->toBe('welcome-email-123')
+        ->and(Arr::get($payload, 'body_html'))->toBe('<p>Hello</p>')
+        ->and(Arr::get($payload, 'body_text'))->toBe('Hello (plain)')
         ->and($sentMessage?->getMessageId())->toBe('mid-123');
 });

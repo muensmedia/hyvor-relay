@@ -47,11 +47,18 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
 
     protected function doSendApi(SentMessage $sentMessage, Email $email, Envelope $envelope): ResponseInterface
     {
+        $headers = [
+            'Authorization' => 'Bearer '.$this->key,
+        ];
+
+        $idempotencyKey = $this->getIdempotencyKey($email);
+        if ($idempotencyKey !== null) {
+            $headers['X-Idempotency-Key'] = $idempotencyKey;
+        }
+
         $response = $this->client->request('POST', $this->getEndpoint().'/api/console/sends', [
             'json' => $this->getPayload($email, $envelope),
-            'headers' => [
-                'Authorization' => 'Bearer '.$this->key,
-            ],
+            'headers' => $headers,
         ]);
 
         try {
@@ -142,6 +149,19 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
             'headers' => $headers ?: null,
             'attachments' => ($attachments = $this->prepareAttachments($email)) ? $attachments : null,
         ]);
+    }
+
+    private function getIdempotencyKey(Email $email): ?string
+    {
+        $header = $email->getHeaders()->get('X-Idempotency-Key');
+        if ($header === null) {
+            return null;
+        }
+
+        $value = trim($header->getBodyAsString());
+        $email->getHeaders()->remove('X-Idempotency-Key');
+
+        return $value !== '' ? $value : null;
     }
 
     protected function stringifyAddresses(array $addresses): array

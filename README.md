@@ -111,6 +111,21 @@ Mail::mailer('hyvor')
     ->send(new \App\Mail\WelcomeMail());
 ```
 
+### Idempotency (recommended for retries)
+
+Hyvor Relay supports idempotency via the `X-Idempotency-Key` HTTP header. When you retry a send request with the same key, Relay can short-circuit and return the original response instead of queueing a duplicate email.
+
+In Laravel you can set this header on the underlying Symfony message:
+
+```php
+Mail::to('user@example.com')->send(
+    (new \App\Mail\WelcomeMail())
+        ->withSymfonyMessage(function (\Symfony\Component\Mime\Email $message) use ($userId) {
+            $message->getHeaders()->addTextHeader('X-Idempotency-Key', "welcome-email-{$userId}");
+        })
+);
+```
+
 ## Local development (this repo)
 
 This repository includes a minimal Docker setup (PHP 8.5 container).

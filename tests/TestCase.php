@@ -15,10 +15,6 @@ class TestCase extends Orchestra
     {
         parent::setUp();
 
-        Factory::guessFactoryNamesUsing(
-            fn (string $modelName) => 'Muensmedia\\HyvorRelay\\Database\\Factories\\'.class_basename($modelName).'Factory'
-        );
-
         // Provide a config array to DataConfig
         $this->app->when(DataConfig::class)
             ->needs('$config')
@@ -41,9 +37,5 @@ class TestCase extends Orchestra
         config()->set('mail.mailers.hyvor', [
             'transport' => 'hyvor-relay',
         ]);
-        /*
-        $migration = include __DIR__.'/../database/migrations/create_hyvor_relay_table.php.stub';
-        $migration->up();
-        */
     }
 }
