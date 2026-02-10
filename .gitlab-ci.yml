@@ -3,7 +3,7 @@ include:
     file:
       - '/package_manager/.composer.yml'
 
-pint (merge request):
+pint:
   extends:
     - .composer-install
   variables:
@@ -15,8 +15,8 @@ pint (merge request):
     key: ${CI_COMMIT_REF_SLUG}-85
     paths:
       - ${COMPOSER_FOLDER}
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+  only:
+    - merge_requests
   script:
     - !reference [.composer-install, script]
     - ./vendor/bin/pint --test
@@ -25,10 +25,6 @@ unit tests php8.5:
   extends:
     - .composer-install
   variables:
-    PHP_VERSION: '8.5'
-    FOLDER_TO_RUN_COMPOSER: './'
-    COMPOSER_FOLDER: './vendor/'
-    COMPOSER_PARAMETERS: '--optimize-autoloader --no-interaction'
   cache:
     key: ${CI_COMMIT_REF_SLUG}-85
     paths:
