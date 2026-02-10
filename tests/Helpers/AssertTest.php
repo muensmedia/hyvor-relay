@@ -12,16 +12,19 @@ it('uses hyvor-relay transport', function () {
 it('should send mail without actually sending it (Mail fake)', function () {
     Mail::fake();
 
+    $to = fake()->safeEmail();
+    $from = fake()->safeEmail();
+
     $mailable = new TestHtmlMailable('<html lang="de"><body>HTML String</body></html>', 'Plain String')
-        ->to('i.schlenther@muensmedia.de')
+        ->to($to)
         ->subject('Test Mail')
-        ->from('test@beyond-phishing.dev');
+        ->from($from);
 
     Mail::send($mailable);
 
-    Mail::assertSent(TestHtmlMailable::class, function (TestHtmlMailable $mail) {
-        return $mail->hasTo('i.schlenther@muensmedia.de')
-            && $mail->hasFrom('test@beyond-phishing.dev')
+    Mail::assertSent(TestHtmlMailable::class, function (TestHtmlMailable $mail) use ($to, $from) {
+        return $mail->hasTo($to)
+            && $mail->hasFrom($from)
             && $mail->subject === 'Test Mail'
             && $mail->htmlString === '<html lang="de"><body>HTML String</body></html>'
             && $mail->plainText === 'Plain String';

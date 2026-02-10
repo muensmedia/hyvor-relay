@@ -46,8 +46,7 @@
     "prefer-stable": true,
     "authors": [
         {
-            "name": "Iven Schlenther",
-            "email": "i.schlenther@muensmedia.de"
+            "name": "Iven Schlenther"
         }
     ],
     "config": {
