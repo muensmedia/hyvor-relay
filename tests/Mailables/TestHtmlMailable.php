@@ -24,4 +24,3 @@ final class TestHtmlMailable extends Mailable
         );
     }
 }
-

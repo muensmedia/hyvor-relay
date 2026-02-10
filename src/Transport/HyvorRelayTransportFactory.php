@@ -10,10 +10,12 @@
  */
 
 namespace Muensmedia\HyvorRelay\Transport;
+
 use Symfony\Component\Mailer\Exception\UnsupportedSchemeException;
 use Symfony\Component\Mailer\Transport\AbstractTransportFactory;
 use Symfony\Component\Mailer\Transport\Dsn;
 use Symfony\Component\Mailer\Transport\TransportInterface;
+
 use function in_array;
 
 /**
@@ -27,7 +29,7 @@ final class HyvorRelayTransportFactory extends AbstractTransportFactory
     public function create(Dsn $dsn): TransportInterface
     {
         throw_if(
-            !in_array($dsn->getScheme(), $this->getSupportedSchemes(), true),
+            ! in_array($dsn->getScheme(), $this->getSupportedSchemes(), true),
             UnsupportedSchemeException::class,
             $dsn,
             'hyvor-relay',
@@ -35,7 +37,7 @@ final class HyvorRelayTransportFactory extends AbstractTransportFactory
         );
 
         return new HyvorRelayApiTransport($this->getUser($dsn), $this->client, $this->dispatcher, $this->logger)
-            ->setHost('default' === $dsn->getHost() ? null : $dsn->getHost())
+            ->setHost($dsn->getHost() === 'default' ? null : $dsn->getHost())
             ->setPort($dsn->getPort());
     }
 

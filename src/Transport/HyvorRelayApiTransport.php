@@ -29,7 +29,7 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
 {
     private string $key;
 
-    public function __construct(string $key, HttpClientInterface|null $client = null, EventDispatcherInterface|null $dispatcher = null, LoggerInterface|null $logger = null)
+    public function __construct(string $key, ?HttpClientInterface $client = null, ?EventDispatcherInterface $dispatcher = null, ?LoggerInterface $logger = null)
     {
         $this->key = $key;
         parent::__construct($client, $dispatcher, $logger);
@@ -42,12 +42,12 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
 
     private function getEndpoint(): ?string
     {
-        return ($this->host ?: config('hyvor-relay.endpoint')) . ($this->port ? ':' . $this->port : '');
+        return ($this->host ?: config('hyvor-relay.endpoint')).($this->port ? ':'.$this->port : '');
     }
 
     protected function doSendApi(SentMessage $sentMessage, Email $email, Envelope $envelope): ResponseInterface
     {
-        $response = $this->client->request('POST', $this->getEndpoint() . '/api/console/sends', [
+        $response = $this->client->request('POST', $this->getEndpoint().'/api/console/sends', [
             'json' => $this->getPayload($email, $envelope),
             'headers' => [
                 'Authorization' => 'Bearer '.$this->key,
@@ -58,7 +58,7 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
             $statusCode = $response->getStatusCode();
             $result = $response->toArray(false);
         } catch (DecodingExceptionInterface) {
-            throw new HttpTransportException('Unable to send an email: ' . $response->getContent(false) . sprintf(' (code %d).', $statusCode), $response);
+            throw new HttpTransportException('Unable to send an email: '.$response->getContent(false).sprintf(' (code %d).', $statusCode), $response);
         } catch (TransportExceptionInterface $e) {
             throw new HttpTransportException('Could not reach the remote Hyvor Relay server.', $response, 0, $e);
         }
@@ -75,18 +75,18 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
         }
 
         throw_if(
-            !$ok,
+            ! $ok,
             HttpTransportException::class,
-            'Unable to send an email: ' . $errorMessage . sprintf(' (code %d).', $statusCode),
+            'Unable to send an email: '.$errorMessage.sprintf(' (code %d).', $statusCode),
             $response
         );
 
         // Hyvor Relay Console API (POST /sends) responds with:
         // { "id": number, "message_id": string }
         $messageId = Arr::get($result, 'message_id');
-        if (!is_scalar($messageId) || (string) $messageId === '') {
+        if (! is_scalar($messageId) || (string) $messageId === '') {
             throw new HttpTransportException(
-                'Unable to send an email: unexpected API response (missing "message_id").' . sprintf(' (code %d).', $statusCode),
+                'Unable to send an email: unexpected API response (missing "message_id").'.sprintf(' (code %d).', $statusCode),
                 $response
             );
         }
@@ -112,6 +112,7 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
 
         $normalizeAddresses = static function (array $addresses) use ($normalizeAddress): array|string {
             $normalized = array_values(Arr::map($addresses, $normalizeAddress));
+
             return count($normalized) === 1 ? $normalized[0] : $normalized;
         };
 
@@ -145,7 +146,7 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
 
     protected function stringifyAddresses(array $addresses): array
     {
-        return Arr::map($addresses, fn(Address $address) => $this->stringifyAddress($address));
+        return Arr::map($addresses, fn (Address $address) => $this->stringifyAddress($address));
     }
 
     public function stringifyAddress(Address $address): array
@@ -153,7 +154,7 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
         return Arr::where([
             'email' => $address->getEncodedAddress(),
             'name' => $address->getName(),
-        ], fn($value) => !empty($value));
+        ], fn ($value) => ! empty($value));
     }
 
     private function prepareAttachments(Email $email): array
@@ -174,19 +175,19 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
         $filteredHeaders = Arr::except([...$headers->all()], $headersToBypass);
         foreach ($filteredHeaders as $name => $header) {
             switch (true) {
-                case  $header instanceof TagHeader:
+                case $header instanceof TagHeader:
                     $headersAndTags['tags'][] = $header->getValue();
                     break;
                 case $header instanceof MetadataHeader:
                     // does not work at the moment
-                    $headersAndTags['headers']['X-Mailin-' . $header->getKey()] = $header->getValue();
+                    $headersAndTags['headers']['X-Mailin-'.$header->getKey()] = $header->getValue();
                     break;
-                case 'templateid' === $name:
-                    $headersAndTags[$header->getName()] = (int)$header->getValue();
+                case $name === 'templateid':
+                    $headersAndTags[$header->getName()] = (int) $header->getValue();
                     // cast it to string as brevo does not accept an integer as custom header value
-                    $headersAndTags['headers']['X-Mailin-Template-Id'] = "".(int)$header->getValue();
+                    $headersAndTags['headers']['X-Mailin-Template-Id'] = ''.(int) $header->getValue();
                     break;
-                case 'params' === $name:
+                case $name === 'params':
                     $headersAndTags[$header->getName()] = json_decode($header->getValue(), true);
                     break;
                 default:
@@ -195,8 +196,9 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
 
         }
 
-        if (Arr::get($headersAndTags, 'headers.X-Mailin-Custom', false))
+        if (Arr::get($headersAndTags, 'headers.X-Mailin-Custom', false)) {
             $headersAndTags['headers']['X-Mailin-Custom'] = print_r($headersAndTags['headers']['X-Mailin-Custom'], true);
+        }
 
         return $headersAndTags;
     }

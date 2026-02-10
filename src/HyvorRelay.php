@@ -2,7 +2,4 @@
 
 namespace Muensmedia\HyvorRelay;
 
-class HyvorRelay
-{
-
-}
+class HyvorRelay {}
