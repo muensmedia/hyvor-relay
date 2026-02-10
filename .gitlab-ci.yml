@@ -43,7 +43,6 @@ unit tests php8.5:
     - !reference [.composer-install, script]
     - ./vendor/bin/pest --compact --profile
   artifacts:
-    when: always
     paths:
       - build/report.junit.xml
     reports:
