@@ -1,61 +1,34 @@
-# 📨 Hyvor Relay (Laravel Mail Transport)
+# Hyvor Relay (Laravel Mail Transport)
 
 Laravel package that adds a custom mail transport (`hyvor-relay`) to send emails through a Hyvor Relay endpoint (Hyvor-hosted or self-hosted).
 
 __[TOC]__
 
-## ✨ What You Get
+## What You Get
 
 - A Laravel mail transport driver: `hyvor-relay`
 - Simple `.env` configuration (`HYVOR_RELAY_API_KEY`, `HYVOR_RELAY_ENDPOINT`)
 - Set Hyvor Relay as the default mailer, or keep your default (SMTP, SES, etc.) and use Hyvor only for specific mails
 
-## ✅ Requirements
+## Requirements
 
 - PHP `^8.5`
-- Laravel `^12.50`
+- Laravel `^12`
 - A Hyvor Relay API key and endpoint
 
-## 📦 Installation (Private GitLab / muensmedia)
-
-This package is hosted on a private GitLab, so Composer must be able to authenticate and must know the repository URL.
-
-1. Add a GitLab token (this writes to Composer `auth.json`):
-
-```bash
-composer config gitlab-token.git.muensmedia.de <YOUR_GITLAB_TOKEN>
-```
-
-Token requirements (typical):
-
-- Personal Access Token: `read_api` or `read_package_registry`
-- Alternatively: GitLab Deploy Token with `read_package_registry`
-
-2. Tell Composer that `git.muensmedia.de` is a GitLab domain:
-
-```bash
-composer config gitlab-domains "git.muensmedia.de"
-```
-
-3. Add the Composer repository for this project:
-
-```bash
-composer config <to-be-added>
-```
-
-4. Require the package:
+## Installation (Composer / Packagist)
 
 ```bash
 composer require muensmedia/hyvor-relay
 ```
 
-5. Publish the config (optional, recommended):
+Publish the config (optional, recommended):
 
 ```bash
 php artisan vendor:publish --tag=hyvor-relay-config
 ```
 
-## ⚙️ Configuration
+## Configuration
 
 Set the API key and endpoint in your Laravel app `.env`:
 
@@ -69,7 +42,7 @@ Notes:
 - `HYVOR_RELAY_ENDPOINT` must be the base URL (no trailing `/api/...` path). The transport will call `POST {endpoint}/api/console/sends`.
 - For a self-hosted Relay instance, set `HYVOR_RELAY_ENDPOINT` to your server URL.
 
-## 📨 Usage
+## Usage
 
 The package registers a mail transport driver named `hyvor-relay`. To use it, configure a Laravel mailer that uses this transport.
 
@@ -138,50 +111,7 @@ Mail::mailer('hyvor')
     ->send(new \App\Mail\WelcomeMail());
 ```
 
-## 🧠 How The Transport Works
-
-Implementation details (high level):
-
-- Laravel calls Symfony Mailer with the configured transport.
-- This package registers the `hyvor-relay` transport and maps it to a Symfony transport with the scheme `hyvor+api`.
-- Sending an email performs an HTTP request: `POST {HYVOR_RELAY_ENDPOINT}/api/console/sends`
-- Authentication is sent via header: `Authorization: Bearer {HYVOR_RELAY_API_KEY}`
-- The JSON payload is built from the `Email` object (simplified):
-
-```json
-{
-  "from": { "name": "Sender", "email": "sender@example.com" },
-  "to": [{ "name": "User", "email": "user@example.com" }],
-  "cc": [],
-  "bcc": [],
-  "subject": "Subject",
-  "body_html": "<p>Hello</p>",
-  "body_text": "Hello",
-  "headers": {
-    "Reply-To": "reply@example.com"
-  },
-  "attachments": [
-    { "name": "file.pdf", "content": "BASE64..." }
-  ]
-}
-```
-
-- Any non-2xx response becomes a transport exception.
-
-## 🧩 Quick Test Mailable (Optional)
-
-This package includes `Muensmedia\HyvorRelay\Mailable\HyvorMailable` as a convenience for sending raw HTML.
-
-```php
-use Illuminate\Support\Facades\Mail;
-use Muensmedia\HyvorRelay\Mailable\HyvorMailable;
-
-Mail::to('user@example.com')->send(
-    new HyvorMailable('<h1>Hello from Hyvor Relay</h1>')
-);
-```
-
-## 🧪 Local Development (This Repo)
+## Local Development (This Repo)
 
 This repository includes a minimal Docker setup (PHP 8.5 container) and helper scripts in `tools/`.
 
@@ -210,7 +140,7 @@ Optional coverage (requires Xdebug or PCOV inside the PHP runtime):
 ./tools/php ./vendor/bin/pest --coverage --configuration phpunit.coverage.xml.dist
 ```
 
-## 🩺 Troubleshooting
+## Troubleshooting
 
 `UnsupportedSchemeException`:
 

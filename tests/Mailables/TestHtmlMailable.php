@@ -1,12 +1,12 @@
 <?php
 
-namespace Muensmedia\HyvorRelay\Mailable;
+namespace Muensmedia\HyvorRelay\Tests\Mailables;
 
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 
-class HyvorMailable extends Mailable
+final class TestHtmlMailable extends Mailable
 {
     use Queueable;
 
@@ -24,3 +24,4 @@ class HyvorMailable extends Mailable
         );
     }
 }
+
