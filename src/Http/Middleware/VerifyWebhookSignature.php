@@ -4,6 +4,7 @@ namespace Muensmedia\HyvorRelay\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Str;
 use Symfony\Component\HttpFoundation\Response;
 
 class VerifyWebhookSignature
@@ -18,7 +19,7 @@ class VerifyWebhookSignature
 
         abort_if($receivedSignature === '', 401, 'Missing webhook signature.');
 
-        if (str_starts_with($receivedSignature, 'sha256=')) {
+        if (Str::startsWith($receivedSignature, 'sha256=')) {
             $receivedSignature = substr($receivedSignature, 7);
         }
 
