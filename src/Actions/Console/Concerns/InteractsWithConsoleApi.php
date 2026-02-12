@@ -19,7 +19,7 @@ trait InteractsWithConsoleApi
         $normalizedUri = ltrim($uri, '/');
 
         $response = HyvorRelayHttp::baseUrl(rtrim((string) config('hyvor-relay.endpoint'), '/').'/api/console')
-            ->withToken((string) config($apiKeyConfig, config('hyvor-relay.api_key')))
+            ->withToken((string) config($apiKeyConfig))
             ->connectTimeout((int) config('hyvor-relay.connect_timeout', 5))
             ->withHeaders($headers)
             ->send($normalizedMethod, $normalizedUri, [

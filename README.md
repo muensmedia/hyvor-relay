@@ -167,7 +167,7 @@ docker compose exec php php ./vendor/bin/pest --coverage --configuration phpunit
 
 401/403 from Relay:
 
-- Check `HYVOR_RELAY_API_KEY`.
+- Check `HYVOR_RELAY_API_KEY_GENERAL` (and `HYVOR_RELAY_API_KEY_SEND` / `HYVOR_RELAY_API_KEY_TRANSPORT` if you use split keys).
 
 Connection issues:
 

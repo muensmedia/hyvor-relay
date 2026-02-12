@@ -1,16 +1,9 @@
 <?php
 
 // Resolve one shared default key first; specific keys can override this per use-case.
-$generalApiKey = env('HYVOR_RELAY_API_KEY_GENERAL', env('HYVOR_RELAY_API_KEY', 'your-api-key-here'));
+$generalApiKey = env('HYVOR_RELAY_API_KEY_GENERAL', 'your-api-key-here');
 
 return [
-    /**
-     * Backward-compatible default API key.
-     *
-     * @deprecated Use api_keys.general, api_keys.send, api_keys.transport.
-     */
-    'api_key' => env('HYVOR_RELAY_API_KEY', 'your-api-key-here'),
-
     /**
      * API keys per use-case.
      *

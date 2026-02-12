@@ -33,7 +33,7 @@ class HyvorRelayServiceProvider extends PackageServiceProvider
                 new Dsn(
                     'hyvor+api',
                     'default',
-                    config('hyvor-relay.api_keys.transport', config('hyvor-relay.api_key'))
+                    config('hyvor-relay.api_keys.transport')
                 )
             );
         });
