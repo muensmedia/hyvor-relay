@@ -7,10 +7,13 @@ __[TOC]__
 ## What you get
 
 - A Laravel mail transport driver: `hyvor-relay`
+- Console API client via `HyvorRelay` service + facade (DTO returns)
+- Console API actions (Sends, Domains, Webhooks, API Keys, Suppressions, Analytics)
+- Testing helpers via facade fake/assert API
+- Default webhook endpoint with typed Laravel event dispatching
 - Environment variable reference: [docs/environment.md](docs/environment.md)
-- Set Hyvor Relay as the default mailer, or keep your default (SMTP, SES, etc.) and use Hyvor only for specific emails
-- Webhook event reference + Laravel listener examples: [docs/webhook-events.md](docs/webhook-events.md)
-- Webhook signature verification (helpers, middleware, multi-route setup): [docs/webhook-signatures.md](docs/webhook-signatures.md)
+- Webhook event reference + listener examples: [docs/webhook-events.md](docs/webhook-events.md)
+- Webhooks (default route, signature verification, helper methods): [docs/webhooks.md](docs/webhooks.md)
 - Queue/retry best practices for Console API usage: [docs/queueing.md](docs/queueing.md)
 
 ## Requirements
@@ -103,6 +106,16 @@ Mail::mailer('hyvor')
     ->to('user@example.com')
     ->send(new \App\Mail\WelcomeMail());
 ```
+
+## Default Webhook Endpoint
+
+This package registers a default webhook endpoint:
+
+- Method: `POST`
+- Path: `/api/hyvor-relay/v1/webhook`
+- Route name: `hyvor-relay.api.v1.webhook`
+
+The endpoint parses incoming Hyvor webhook payloads and dispatches typed Laravel events (see [docs/webhook-events.md](docs/webhook-events.md)).
 
 ### Idempotency (recommended for retries)
 

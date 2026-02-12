@@ -1,9 +1,22 @@
-# Webhook Signature Verification
+# Webhooks
 
-This package provides two ways to verify Hyvor Relay webhook signatures:
+This package gives you a complete webhook integration setup:
 
-- a middleware: `VerifyWebhookSignature`
-- helper methods via facade: `HyvorRelay::signWebhookPayload(...)` and `HyvorRelay::verifyWebhookSignature(...)`
+- a default webhook route
+- typed Laravel events for Hyvor webhook payloads (see `docs/webhook-events.md`)
+- signature verification via middleware
+- signature helper methods via facade
+
+## Package Default Webhook Route
+
+When package routes are enabled, this route is registered by default:
+
+- Method: `POST`
+- Path: `/api/hyvor-relay/v1/webhook`
+- Route name: `hyvor-relay.api.v1.webhook`
+- Middleware: `VerifyWebhookSignature`
+
+Incoming payloads are parsed and mapped to strongly typed DTO-based Laravel events.
 
 ## Default Middleware
 
