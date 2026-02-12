@@ -7,6 +7,11 @@ use Muensmedia\HyvorRelay\Data\Webhooks\Objects\DomainData;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Data;
 
+/**
+ * Payload DTO for domain.status.changed webhook events.
+ *
+ * @see https://relay.hyvor.com/docs/webhooks#domain-status-changed
+ */
 class DomainStatusChangedPayloadData extends Data
 {
     public function __construct(

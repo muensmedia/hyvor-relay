@@ -7,6 +7,11 @@ use Muensmedia\HyvorRelay\Data\Webhooks\Objects\SendData;
 use Muensmedia\HyvorRelay\Data\Webhooks\Objects\SendRecipientData;
 use Spatie\LaravelData\Data;
 
+/**
+ * Payload DTO for send.recipient.complained webhook events.
+ *
+ * @see https://relay.hyvor.com/docs/webhooks#send-recipient-complained
+ */
 class SendRecipientComplainedPayloadData extends Data
 {
     public function __construct(

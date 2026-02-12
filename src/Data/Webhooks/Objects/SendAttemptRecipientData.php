@@ -5,6 +5,11 @@ namespace Muensmedia\HyvorRelay\Data\Webhooks\Objects;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Data;
 
+/**
+ * DTO for per-recipient SMTP result data inside a send attempt.
+ *
+ * @see https://relay.hyvor.com/docs/api-console#send-attempt-object
+ */
 class SendAttemptRecipientData extends Data
 {
     public function __construct(

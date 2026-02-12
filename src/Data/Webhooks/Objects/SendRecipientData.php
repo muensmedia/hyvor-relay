@@ -5,6 +5,11 @@ namespace Muensmedia\HyvorRelay\Data\Webhooks\Objects;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Data;
 
+/**
+ * DTO for a recipient entry of a send.
+ *
+ * @see https://relay.hyvor.com/docs/api-console#send-recipient-object
+ */
 class SendRecipientData extends Data
 {
     public function __construct(

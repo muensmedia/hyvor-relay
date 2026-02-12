@@ -7,6 +7,11 @@ use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
 
+/**
+ * DTO for the Hyvor Relay Send object used in webhook payloads.
+ *
+ * @see https://relay.hyvor.com/docs/api-console#send-object
+ */
 class SendData extends Data
 {
     public function __construct(

@@ -7,6 +7,11 @@ use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Data;
 use Spatie\LaravelData\DataCollection;
 
+/**
+ * DTO for a delivery attempt of a send recipient.
+ *
+ * @see https://relay.hyvor.com/docs/api-console#send-attempt-object
+ */
 class SendAttemptData extends Data
 {
     public function __construct(

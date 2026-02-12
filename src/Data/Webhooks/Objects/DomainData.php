@@ -5,6 +5,11 @@ namespace Muensmedia\HyvorRelay\Data\Webhooks\Objects;
 use Spatie\LaravelData\Attributes\MapInputName;
 use Spatie\LaravelData\Data;
 
+/**
+ * DTO for domain data managed by Hyvor Relay.
+ *
+ * @see https://relay.hyvor.com/docs/api-console#domain-object
+ */
 class DomainData extends Data
 {
     public function __construct(
