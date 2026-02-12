@@ -8,7 +8,7 @@ use Muensmedia\HyvorRelay\Fakes\HyvorRelayFake;
 /**
  * Static facade proxy for the HyvorRelay service.
  *
- * @method static \Muensmedia\HyvorRelay\Data\Console\Responses\SendEmailResponseData sendEmail(array $payload, ?string $idempotencyKey = null)
+ * @method static \Muensmedia\HyvorRelay\Data\Console\Responses\SendEmailResponseData sendEmail(\Muensmedia\HyvorRelay\Data\Console\Requests\SendEmailPayloadData $payload, ?string $idempotencyKey = null)
  * @method static \Spatie\LaravelData\DataCollection<int, \Muensmedia\HyvorRelay\Data\Console\Objects\SendData> getSends(array $query = [])
  * @method static \Muensmedia\HyvorRelay\Data\Console\Objects\SendData getSendById(int $id)
  * @method static \Muensmedia\HyvorRelay\Data\Console\Objects\SendData getSendByUuid(string $uuid)

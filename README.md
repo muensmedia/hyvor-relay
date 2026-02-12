@@ -96,13 +96,14 @@ Use this when you want direct API access beyond Laravel Mail transport.
 
 ```php
 use Muensmedia\HyvorRelay\Facades\HyvorRelay;
+use Muensmedia\HyvorRelay\Data\Console\Requests\SendEmailPayloadData;
 
-$response = HyvorRelay::sendEmail([
+$response = HyvorRelay::sendEmail(SendEmailPayloadData::from([
     'from' => 'app@example.com',
     'to' => 'user@example.com',
     'subject' => 'Welcome',
     'body_text' => 'Hello from Relay',
-], 'welcome-email-123');
+]), 'welcome-email-123');
 
 $domains = HyvorRelay::getDomains();
 $stats = HyvorRelay::getAnalyticsStats('7d');

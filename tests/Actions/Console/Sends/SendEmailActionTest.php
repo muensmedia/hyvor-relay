@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Client\Request;
 use Muensmedia\HyvorRelay\Actions\Console\Sends\SendEmailAction;
+use Muensmedia\HyvorRelay\Data\Console\Requests\SendEmailPayloadData;
 use Muensmedia\HyvorRelay\Facades\HyvorRelayHttp;
 
 it('sends request via action with idempotency header', function () {
@@ -16,19 +17,21 @@ it('sends request via action with idempotency header', function () {
         ], 200);
     });
 
-    $result = SendEmailAction::run([
+    $payload = SendEmailPayloadData::from([
         'from' => 'app@example.test',
         'to' => 'john@example.test',
         'subject' => 'Hello',
         'body_text' => 'Hi',
-    ], 'welcome-7');
+    ]);
 
-    expect($result->id)->toBe(7);
+    $result = SendEmailAction::run($payload, 'welcome-7');
 
-    expect($capturedRequest)->not->toBeNull();
-    expect($capturedRequest->method())->toBe('POST');
-    expect($capturedRequest->url())
-        ->toBe(rtrim((string) config('hyvor-relay.endpoint'), '/').'/api/console/sends');
-    expect($capturedRequest->header('X-Idempotency-Key')[0])->toBe('welcome-7');
-    expect($capturedRequest['subject'])->toBe('Hello');
+    expect($result->id)->toBe(7)
+        ->and($capturedRequest)->not->toBeNull()
+        ->and($capturedRequest->method())->toBe('POST')
+        ->and($capturedRequest->url())
+        ->toBe(rtrim((string)config('hyvor-relay.endpoint'), '/') . '/api/console/sends')
+        ->and($capturedRequest->header('X-Idempotency-Key')[0])->toBe('welcome-7')
+        ->and($capturedRequest['subject'])->toBe('Hello');
+
 });

@@ -1,6 +1,7 @@
 <?php
 
 use Muensmedia\HyvorRelay\Actions\Console\Sends\SendEmailAction;
+use Muensmedia\HyvorRelay\Data\Console\Requests\SendEmailPayloadData;
 
 it('uses HyvorRelayHttp preset instead of direct Http facade in src', function () {
     $allowed = [
@@ -30,10 +31,10 @@ it('uses HyvorRelayHttp preset instead of direct Http facade in src', function (
 });
 
 it('prevents stray HyvorRelay console http requests by default in tests', function () {
-    expect(fn () => SendEmailAction::run([
+    expect(fn () => SendEmailAction::run(SendEmailPayloadData::from([
         'from' => 'app@example.test',
         'to' => 'john@example.test',
         'subject' => 'Hello',
         'body_text' => 'Hi',
-    ]))->toThrow(\RuntimeException::class);
+    ])))->toThrow(\RuntimeException::class);
 });

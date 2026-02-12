@@ -11,6 +11,7 @@ namespace App\Jobs;
 
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Muensmedia\HyvorRelay\Facades\HyvorRelay;
+use Muensmedia\HyvorRelay\Data\Console\Requests\SendEmailPayloadData;
 
 class SendWelcomeEmailJob implements ShouldQueue
 {
@@ -28,12 +29,12 @@ class SendWelcomeEmailJob implements ShouldQueue
 
     public function handle(): void
     {
-        HyvorRelay::sendEmail([
+        HyvorRelay::sendEmail(SendEmailPayloadData::from([
             'from' => 'app@example.com',
             'to' => $this->email,
             'subject' => 'Welcome',
             'body_text' => 'Thanks for signing up.',
-        ], "welcome-email-{$this->userId}");
+        ]), "welcome-email-{$this->userId}");
     }
 }
 ```

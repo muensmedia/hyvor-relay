@@ -29,6 +29,7 @@ use Muensmedia\HyvorRelay\Data\Console\Objects\ApiKeyData;
 use Muensmedia\HyvorRelay\Data\Console\Objects\DomainData;
 use Muensmedia\HyvorRelay\Data\Console\Objects\SendData;
 use Muensmedia\HyvorRelay\Data\Console\Objects\WebhookData;
+use Muensmedia\HyvorRelay\Data\Console\Requests\SendEmailPayloadData;
 use Muensmedia\HyvorRelay\Data\Console\Responses\AnalyticsSendsChartData;
 use Muensmedia\HyvorRelay\Data\Console\Responses\AnalyticsStatsData;
 use Muensmedia\HyvorRelay\Data\Console\Responses\EmptyResponseData;
@@ -40,7 +41,7 @@ class HyvorRelay
     /**
      * Send an email via the Console API.
      */
-    public function sendEmail(array $payload, ?string $idempotencyKey = null): SendEmailResponseData
+    public function sendEmail(SendEmailPayloadData $payload, ?string $idempotencyKey = null): SendEmailResponseData
     {
         return SendEmailAction::run($payload, $idempotencyKey);
     }

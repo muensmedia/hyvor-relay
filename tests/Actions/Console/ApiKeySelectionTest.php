@@ -3,6 +3,7 @@
 use Illuminate\Http\Client\Request;
 use Muensmedia\HyvorRelay\Actions\Console\Analytics\GetAnalyticsStatsAction;
 use Muensmedia\HyvorRelay\Actions\Console\Sends\SendEmailAction;
+use Muensmedia\HyvorRelay\Data\Console\Requests\SendEmailPayloadData;
 use Muensmedia\HyvorRelay\Facades\HyvorRelayHttp;
 
 it('uses send api key for sends endpoints', function () {
@@ -20,12 +21,12 @@ it('uses send api key for sends endpoints', function () {
         ], 200);
     });
 
-    SendEmailAction::run([
+    SendEmailAction::run(SendEmailPayloadData::from([
         'from' => 'app@example.test',
         'to' => 'john@example.test',
         'subject' => 'Hello',
         'body_text' => 'Hi',
-    ]);
+    ]));
 
     expect($captured)->not->toBeNull();
     expect($captured->header('Authorization')[0])->toBe('Bearer send-key-123');

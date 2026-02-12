@@ -1,17 +1,18 @@
 <?php
 
+use Muensmedia\HyvorRelay\Data\Console\Requests\SendEmailPayloadData;
 use Muensmedia\HyvorRelay\Facades\HyvorRelay;
 
 it('can fake and assert api calls via facade', function () {
     HyvorRelay::fake()
         ->setResponse('sendEmail', ['id' => 42, 'message_id' => 'm-1']);
 
-    $response = HyvorRelay::sendEmail([
+    $response = HyvorRelay::sendEmail(SendEmailPayloadData::from([
         'from' => 'app@example.test',
         'to' => 'john@example.test',
         'subject' => 'Hello',
         'body_text' => 'Hi',
-    ], 'welcome-1');
+    ]), 'welcome-1');
 
     expect($response)->toBe(['id' => 42, 'message_id' => 'm-1']);
 

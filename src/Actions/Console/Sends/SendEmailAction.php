@@ -4,6 +4,7 @@ namespace Muensmedia\HyvorRelay\Actions\Console\Sends;
 
 use Lorisleiva\Actions\Concerns\AsObject;
 use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
+use Muensmedia\HyvorRelay\Data\Console\Requests\SendEmailPayloadData;
 use Muensmedia\HyvorRelay\Data\Console\Responses\SendEmailResponseData;
 
 /**
@@ -13,7 +14,7 @@ class SendEmailAction
 {
     use AsObject, InteractsWithConsoleApi;
 
-    public function handle(array $payload, ?string $idempotencyKey = null): SendEmailResponseData
+    public function handle(SendEmailPayloadData $payload, ?string $idempotencyKey = null): SendEmailResponseData
     {
         $headers = [];
 
@@ -25,7 +26,7 @@ class SendEmailAction
             $this->request(
                 'POST',
                 'sends',
-                json: $payload,
+                json: $payload->toApiPayload(),
                 headers: $headers,
                 apiKeyConfig: 'hyvor-relay.api_keys.send'
             )
