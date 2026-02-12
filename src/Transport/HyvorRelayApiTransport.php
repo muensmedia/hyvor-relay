@@ -8,6 +8,7 @@
 namespace Muensmedia\HyvorRelay\Transport;
 
 use Illuminate\Support\Arr;
+use Illuminate\Support\Str;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\Mailer\Envelope;
@@ -180,7 +181,7 @@ final class HyvorRelayApiTransport extends AbstractApiTransport
     {
         return Arr::map($email->getAttachments(), function (DataPart $attachment) {
             return [
-                'content' => str_replace("\r\n", '', $attachment->bodyToString()),
+                'content' => Str::replace("\r\n", '', $attachment->bodyToString()),
                 'name' => $attachment->getPreparedHeaders()->getHeaderParameter('Content-Disposition', 'filename'),
             ];
         });

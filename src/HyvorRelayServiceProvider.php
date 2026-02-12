@@ -14,6 +14,7 @@ class HyvorRelayServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('hyvor-relay')
+            ->hasRoute('api')
             ->hasConfigFile();
     }
 

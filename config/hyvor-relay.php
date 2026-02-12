@@ -23,4 +23,14 @@ return [
      * - POST {endpoint}/api/console/sends
      */
     'endpoint' => env('HYVOR_RELAY_ENDPOINT', 'https://relay.hyvor.com'),
+
+    /**
+     * Secret for validating incoming webhook signatures.
+     *
+     * @see https://relay.hyvor.com/docs/webhooks#validating-webhooks
+     *
+     * Relay signs the raw JSON body as HMAC-SHA256 and sends it in the X-Signature header.
+     */
+    'webhook_secret' => env('HYVOR_RELAY_WEBHOOK_SECRET'),
+
 ];
