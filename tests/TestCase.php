@@ -6,7 +6,6 @@ use Lorisleiva\Actions\ActionServiceProvider;
 use Muensmedia\HyvorRelay\HyvorRelayServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\LaravelData\LaravelDataServiceProvider;
-use Spatie\LaravelData\Support\DataConfig;
 
 class TestCase extends Orchestra
 {
