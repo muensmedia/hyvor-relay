@@ -9,6 +9,7 @@ __[TOC]__
 - A Laravel mail transport driver: `hyvor-relay`
 - Simple `.env` configuration (`HYVOR_RELAY_API_KEY`, `HYVOR_RELAY_ENDPOINT`)
 - Set Hyvor Relay as the default mailer, or keep your default (SMTP, SES, etc.) and use Hyvor only for specific emails
+- Webhook event reference + Laravel listener examples: [docs/webhook-events.md](docs/webhook-events.md)
 
 ## Requirements
 
