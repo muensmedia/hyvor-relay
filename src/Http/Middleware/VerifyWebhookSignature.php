@@ -4,8 +4,8 @@ namespace Muensmedia\HyvorRelay\Http\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Muensmedia\HyvorRelay\HyvorRelay;
 use Illuminate\Support\Str;
+use Muensmedia\HyvorRelay\HyvorRelay;
 use Symfony\Component\HttpFoundation\Response;
 
 class VerifyWebhookSignature
@@ -20,9 +20,7 @@ class VerifyWebhookSignature
 
         abort_if($receivedSignature === '', 401, 'Missing webhook signature.');
 
-        if (! app(HyvorRelay::class)->verifyWebhookSignature($request->getContent(), $receivedSignature, $secret)) {
-            abort(401, 'Invalid webhook signature.');
-        }
+        abort_unless(app(HyvorRelay::class)->verifyWebhookSignature($request->getContent(), $receivedSignature, $secret), 401, 'Invalid webhook signature.');
 
         return $next($request);
     }
@@ -33,7 +31,7 @@ class VerifyWebhookSignature
             return (string) config('hyvor-relay.webhook_secret', '');
         }
 
-        if (str_starts_with($secretOrConfig, 'config:')) {
+        if (Str::startsWith($secretOrConfig, 'config:')) {
             return (string) config(substr($secretOrConfig, 7), '');
         }
 

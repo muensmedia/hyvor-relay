@@ -2,6 +2,7 @@
 
 namespace Muensmedia\HyvorRelay;
 
+use Illuminate\Support\Str;
 use Muensmedia\HyvorRelay\Actions\Console\Analytics\GetAnalyticsSendsChartAction;
 use Muensmedia\HyvorRelay\Actions\Console\Analytics\GetAnalyticsStatsAction;
 use Muensmedia\HyvorRelay\Actions\Console\ApiKeys\CreateApiKeyAction;
@@ -241,7 +242,7 @@ class HyvorRelay
     {
         $normalizedSignature = trim($signature);
 
-        if (str_starts_with($normalizedSignature, 'sha256=')) {
+        if (Str::startsWith($normalizedSignature, 'sha256=')) {
             $normalizedSignature = substr($normalizedSignature, 7);
         }
 
