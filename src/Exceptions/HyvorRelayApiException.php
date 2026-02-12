@@ -23,8 +23,7 @@ class HyvorRelayApiException extends Exception
         string $method,
         string $uri,
         ?string $source = null
-    ): self
-    {
+    ): self {
         return new self(
             status: $response->status(),
             method: $method,
