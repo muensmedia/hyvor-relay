@@ -10,6 +10,12 @@ use Symfony\Component\Mailer\Transport\Dsn;
 
 class HyvorRelayServiceProvider extends PackageServiceProvider
 {
+    public function registeringPackage(): void
+    {
+        $this->app->singleton(HyvorRelay::class);
+        $this->app->alias(HyvorRelay::class, 'hyvor-relay');
+    }
+
     public function configurePackage(Package $package): void
     {
         $package
