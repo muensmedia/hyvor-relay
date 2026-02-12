@@ -11,7 +11,7 @@ function postSignedWebhook(array $body)
     $signature = hash_hmac('sha256', $json, (string) config('hyvor-relay.webhook_secret'));
     $tokenParam = (string) config('hyvor-relay.webhook_token_query_parameter', 'token');
     $token = (string) config('hyvor-relay.webhook_token');
-    $url = '/api/hyvor-relay/v1/webhook?' . http_build_query([$tokenParam => $token]);
+    $url = '/api/hyvor-relay/v1/webhook?'.http_build_query([$tokenParam => $token]);
 
     return test()->call('POST', $url, [], [], [], [
         'CONTENT_TYPE' => 'application/json',
