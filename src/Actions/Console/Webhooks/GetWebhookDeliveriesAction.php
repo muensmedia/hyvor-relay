@@ -14,6 +14,9 @@ class GetWebhookDeliveriesAction
 {
     use AsObject, InteractsWithConsoleApi;
 
+    /**
+     * @return DataCollection<int, WebhookDeliveryData>
+     */
     public function handle(array $query = []): DataCollection
     {
         return WebhookDeliveryData::collect(

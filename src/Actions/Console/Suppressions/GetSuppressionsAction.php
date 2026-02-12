@@ -14,6 +14,9 @@ class GetSuppressionsAction
 {
     use AsObject, InteractsWithConsoleApi;
 
+    /**
+     * @return DataCollection<int, SuppressionData>
+     */
     public function handle(array $query = []): DataCollection
     {
         return SuppressionData::collect(

@@ -14,6 +14,9 @@ class GetDomainsAction
 {
     use AsObject, InteractsWithConsoleApi;
 
+    /**
+     * @return DataCollection<int, DomainData>
+     */
     public function handle(array $query = []): DataCollection
     {
         return DomainData::collect(

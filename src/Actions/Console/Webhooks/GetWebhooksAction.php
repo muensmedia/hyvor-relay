@@ -14,6 +14,9 @@ class GetWebhooksAction
 {
     use AsObject, InteractsWithConsoleApi;
 
+    /**
+     * @return DataCollection<int, WebhookData>
+     */
     public function handle(): DataCollection
     {
         return WebhookData::collect(

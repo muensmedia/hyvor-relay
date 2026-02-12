@@ -14,6 +14,9 @@ class GetSendsAction
 {
     use AsObject, InteractsWithConsoleApi;
 
+    /**
+     * @return DataCollection<int, SendData>
+     */
     public function handle(array $query = []): DataCollection
     {
         return SendData::collect(

@@ -14,6 +14,9 @@ class GetApiKeysAction
 {
     use AsObject, InteractsWithConsoleApi;
 
+    /**
+     * @return DataCollection<int, ApiKeyData>
+     */
     public function handle(): DataCollection
     {
         return ApiKeyData::collect(

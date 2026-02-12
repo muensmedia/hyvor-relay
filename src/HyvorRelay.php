@@ -46,6 +46,8 @@ class HyvorRelay
 
     /**
      * List sends with optional filtering and pagination parameters.
+     *
+     * @return DataCollection<int, SendData>
      */
     public function getSends(array $query = []): DataCollection
     {
@@ -70,6 +72,8 @@ class HyvorRelay
 
     /**
      * List domains for the current project.
+     *
+     * @return DataCollection<int, DomainData>
      */
     public function getDomains(array $query = []): DataCollection
     {
@@ -110,6 +114,8 @@ class HyvorRelay
 
     /**
      * List configured webhooks.
+     *
+     * @return DataCollection<int, WebhookData>
      */
     public function getWebhooks(): DataCollection
     {
@@ -142,6 +148,8 @@ class HyvorRelay
 
     /**
      * List webhook delivery attempts.
+     *
+     * @return DataCollection<int, \Muensmedia\HyvorRelay\Data\Console\Objects\WebhookDeliveryData>
      */
     public function getWebhookDeliveries(array $query = []): DataCollection
     {
@@ -150,6 +158,8 @@ class HyvorRelay
 
     /**
      * List API keys in the current project.
+     *
+     * @return DataCollection<int, ApiKeyData>
      */
     public function getApiKeys(): DataCollection
     {
@@ -182,6 +192,8 @@ class HyvorRelay
 
     /**
      * List suppression entries with optional filters.
+     *
+     * @return DataCollection<int, \Muensmedia\HyvorRelay\Data\Console\Objects\SuppressionData>
      */
     public function getSuppressions(array $query = []): DataCollection
     {
