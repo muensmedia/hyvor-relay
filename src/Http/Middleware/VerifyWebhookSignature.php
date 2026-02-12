@@ -19,9 +19,8 @@ class VerifyWebhookSignature
 
         abort_if($receivedSignature === '', 401, 'Missing webhook signature.');
 
-        if (Str::startsWith($receivedSignature, 'sha256=')) {
+        if (Str::startsWith($receivedSignature, 'sha256='))
             $receivedSignature = substr($receivedSignature, 7);
-        }
 
         $calculatedSignature = hash_hmac('sha256', $request->getContent(), $secret);
 
