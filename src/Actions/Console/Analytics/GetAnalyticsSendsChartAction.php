@@ -7,7 +7,7 @@ use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Responses\AnalyticsSendsChartData;
 
 /**
- * @see https://relay.hyvor.com/docs/console-api#get-analytics-chart-data
+ * @see https://relay.hyvor.com/docs/api-console#get-analytics-chart
  */
 class GetAnalyticsSendsChartAction
 {

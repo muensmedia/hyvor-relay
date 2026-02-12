@@ -8,7 +8,7 @@ use Muensmedia\HyvorRelay\Data\Console\Objects\SuppressionData;
 use Spatie\LaravelData\DataCollection;
 
 /**
- * @see https://relay.hyvor.com/docs/console-api#get-suppressions
+ * @see https://relay.hyvor.com/docs/api-console#get-suppressions
  */
 class GetSuppressionsAction
 {

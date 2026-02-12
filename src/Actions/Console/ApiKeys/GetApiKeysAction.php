@@ -8,7 +8,7 @@ use Muensmedia\HyvorRelay\Data\Console\Objects\ApiKeyData;
 use Spatie\LaravelData\DataCollection;
 
 /**
- * @see https://relay.hyvor.com/docs/console-api#get-api-keys
+ * @see https://relay.hyvor.com/docs/api-console#get-api-keys
  */
 class GetApiKeysAction
 {

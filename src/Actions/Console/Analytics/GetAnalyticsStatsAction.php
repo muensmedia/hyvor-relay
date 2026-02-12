@@ -7,7 +7,7 @@ use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Responses\AnalyticsStatsData;
 
 /**
- * @see https://relay.hyvor.com/docs/console-api#get-analytics-statistics
+ * @see https://relay.hyvor.com/docs/api-console#get-analytics-stats
  */
 class GetAnalyticsStatsAction
 {

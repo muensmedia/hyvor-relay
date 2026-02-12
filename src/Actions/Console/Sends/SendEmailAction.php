@@ -8,7 +8,7 @@ use Muensmedia\HyvorRelay\Data\Console\Requests\SendEmailPayloadData;
 use Muensmedia\HyvorRelay\Data\Console\Responses\SendEmailResponseData;
 
 /**
- * @see https://relay.hyvor.com/docs/console-api#send-email
+ * @see https://relay.hyvor.com/docs/api-console#send-email
  */
 class SendEmailAction
 {

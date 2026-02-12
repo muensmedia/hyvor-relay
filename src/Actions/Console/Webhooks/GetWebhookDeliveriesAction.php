@@ -8,7 +8,7 @@ use Muensmedia\HyvorRelay\Data\Console\Objects\WebhookDeliveryData;
 use Spatie\LaravelData\DataCollection;
 
 /**
- * @see https://relay.hyvor.com/docs/console-api#get-webhook-deliveries
+ * @see https://relay.hyvor.com/docs/api-console#get-webhook-deliveries
  */
 class GetWebhookDeliveriesAction
 {

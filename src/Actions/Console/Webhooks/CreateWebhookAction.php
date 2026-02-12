@@ -7,7 +7,7 @@ use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Objects\WebhookData;
 
 /**
- * @see https://relay.hyvor.com/docs/console-api#create-webhook
+ * @see https://relay.hyvor.com/docs/api-console#create-webhook
  */
 class CreateWebhookAction
 {

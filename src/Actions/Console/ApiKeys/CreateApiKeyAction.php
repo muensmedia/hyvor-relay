@@ -7,7 +7,7 @@ use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Objects\ApiKeyData;
 
 /**
- * @see https://relay.hyvor.com/docs/console-api#create-api-key
+ * @see https://relay.hyvor.com/docs/api-console#create-api-key
  */
 class CreateApiKeyAction
 {

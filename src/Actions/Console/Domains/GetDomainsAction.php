@@ -8,7 +8,7 @@ use Muensmedia\HyvorRelay\Data\Console\Objects\DomainData;
 use Spatie\LaravelData\DataCollection;
 
 /**
- * @see https://relay.hyvor.com/docs/console-api#get-domains
+ * @see https://relay.hyvor.com/docs/api-console#get-domains
  */
 class GetDomainsAction
 {

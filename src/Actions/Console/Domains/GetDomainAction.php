@@ -7,7 +7,7 @@ use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Objects\DomainData;
 
 /**
- * @see https://relay.hyvor.com/docs/console-api#get-domain
+ * @see https://relay.hyvor.com/docs/api-console#get-domain
  */
 class GetDomainAction
 {

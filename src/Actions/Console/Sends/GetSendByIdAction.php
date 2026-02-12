@@ -7,7 +7,7 @@ use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Objects\SendData;
 
 /**
- * @see https://relay.hyvor.com/docs/console-api#get-send-by-id
+ * @see https://relay.hyvor.com/docs/api-console#get-send
  */
 class GetSendByIdAction
 {

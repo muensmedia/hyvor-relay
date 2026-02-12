@@ -7,7 +7,7 @@ use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Responses\EmptyResponseData;
 
 /**
- * @see https://relay.hyvor.com/docs/console-api#delete-api-key
+ * @see https://relay.hyvor.com/docs/api-console#delete-api-key
  */
 class DeleteApiKeyAction
 {
