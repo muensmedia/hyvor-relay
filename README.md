@@ -81,9 +81,18 @@ If optional keys are not set, they fallback to `HYVOR_RELAY_API_KEY_GENERAL`.
 
 Then send as usual with Laravel Mail.
 
+```php
+use Illuminate\Support\Facades\Mail;
+
+Mail::mailer('hyvor')->to('user@example.com')->send(new \App\Mail\WelcomeMail());
+```
+
+This is the preferred path if you already use Laravel Mailables.
+
 ## Console API Usage (Facade)
 
 Use the facade as the package's public API. Actions are internal implementation details.
+Use this when you want direct API access beyond Laravel Mail transport.
 
 ```php
 use Muensmedia\HyvorRelay\Facades\HyvorRelay;
