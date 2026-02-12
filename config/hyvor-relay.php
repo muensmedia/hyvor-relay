@@ -33,19 +33,4 @@ return [
      */
     'webhook_secret' => env('HYVOR_RELAY_WEBHOOK_SECRET'),
 
-    /**
-     * Static token expected as query parameter on webhook URLs.
-     *
-     * Example:
-     * - https://your-app.test/api/hyvor-relay/v1/webhook?token=...
-     *
-     * Generate a token:
-     * - php -r "echo bin2hex(random_bytes(32)).PHP_EOL;"
-     */
-    'webhook_token' => env('HYVOR_RELAY_WEBHOOK_TOKEN'),
-
-    /**
-     * Query parameter name used to transmit the webhook token.
-     */
-    'webhook_token_query_parameter' => env('HYVOR_RELAY_WEBHOOK_TOKEN_QUERY_PARAMETER', 'token'),
 ];

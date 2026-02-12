@@ -3,17 +3,13 @@
 use Illuminate\Support\Facades\Event;
 use Muensmedia\HyvorRelay\Enum\EventTypes;
 use Muensmedia\HyvorRelay\Events\Webhooks\SendRecipientAcceptedReceived;
-use Muensmedia\HyvorRelay\Exceptions\MissingWebhookTokenConfigurationException;
 
 function postSignedWebhook(array $body)
 {
     $json = json_encode($body, JSON_THROW_ON_ERROR);
     $signature = hash_hmac('sha256', $json, (string) config('hyvor-relay.webhook_secret'));
-    $tokenParam = (string) config('hyvor-relay.webhook_token_query_parameter', 'token');
-    $token = (string) config('hyvor-relay.webhook_token');
-    $url = '/api/hyvor-relay/v1/webhook?'.http_build_query([$tokenParam => $token]);
 
-    return test()->call('POST', $url, [], [], [], [
+    return test()->call('POST', '/api/hyvor-relay/v1/webhook', [], [], [], [
         'CONTENT_TYPE' => 'application/json',
         'HTTP_X_SIGNATURE' => $signature,
     ], $json);
@@ -102,37 +98,10 @@ it('rejects webhook requests with invalid signature', function () {
         ->withHeaders([
             'X-Signature' => 'invalid',
         ])
-        ->postJson('/api/hyvor-relay/v1/webhook?token=test-token', [
+        ->postJson('/api/hyvor-relay/v1/webhook', [
             'event' => EventTypes::SEND_RECIPIENT_ACCEPTED->value,
             'payload' => [],
         ]);
 
     $response->assertUnauthorized();
-});
-
-it('rejects webhook requests with invalid token', function () {
-    $signature = hash_hmac('sha256', '{}', (string) config('hyvor-relay.webhook_secret'));
-
-    $response = $this
-        ->withHeaders([
-            'X-Signature' => $signature,
-        ])
-        ->postJson('/api/hyvor-relay/v1/webhook?token=wrong-token', [
-            // Keep body exactly "{}" for deterministic signature.
-        ]);
-
-    $response->assertUnauthorized();
-});
-
-it('throws a dedicated exception when webhook token config is missing', function () {
-    config()->set('hyvor-relay.webhook_token', null);
-
-    $this->withoutExceptionHandling();
-
-    $this->expectException(MissingWebhookTokenConfigurationException::class);
-
-    $this->postJson('/api/hyvor-relay/v1/webhook?token=test-token', [
-        'event' => EventTypes::SEND_RECIPIENT_ACCEPTED->value,
-        'payload' => [],
-    ]);
 });
