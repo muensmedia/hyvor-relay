@@ -18,48 +18,8 @@ This document lists all webhook events dispatched by this package as Laravel eve
 | `suppression.created` | `Muensmedia\HyvorRelay\Events\Webhooks\SuppressionCreatedReceived` | A suppression entry was created. | https://relay.hyvor.com/docs/webhooks#suppression-created |
 | `suppression.deleted` | `Muensmedia\HyvorRelay\Events\Webhooks\SuppressionDeletedReceived` | A suppression entry was removed. | https://relay.hyvor.com/docs/webhooks#suppression-deleted |
 
-## Single Listener Example
+## Laravel Event Implementation
 
-By default, Laravel can auto-discover this listener from the typed event in the `handle(...)` method parameter.
+For implementation details (listeners, discovery, and registration), see the official Laravel documentation:
 
-```php
-<?php
-
-namespace App\Listeners;
-
-use Muensmedia\HyvorRelay\Events\Webhooks\SendRecipientBouncedReceived;
-
-class MarkRecipientAsBounced
-{
-    public function handle(SendRecipientBouncedReceived $event): void
-    {
-        $email = $event->payload->recipient->address;
-
-        // Example: mark recipient locally / block / log
-        // Recipient::where('email', $email)->update(['status' => 'bounced']);
-    }
-}
-```
-
-## Option 1: Register Via EventServiceProvider
-
-`app/Providers/EventServiceProvider.php`:
-
-```php
-protected $listen = [
-    \Muensmedia\HyvorRelay\Events\Webhooks\SendRecipientBouncedReceived::class => [
-        \App\Listeners\MarkRecipientAsBounced::class,
-    ],
-];
-```
-
-## Option 2: Event Discovery (No Provider Entry)
-
-If event discovery is enabled, place the listener class in `app/Listeners` with a correctly typed `handle(...)` method. No `$listen` entry is required.
-
-Rebuild event cache:
-
-```bash
-php artisan event:clear
-php artisan event:cache
-```
+https://laravel.com/docs/events
