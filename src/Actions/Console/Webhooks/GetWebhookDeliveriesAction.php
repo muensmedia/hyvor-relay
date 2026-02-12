@@ -3,18 +3,15 @@
 namespace Muensmedia\HyvorRelay\Actions\Console\Webhooks;
 
 use Lorisleiva\Actions\Concerns\AsAction;
-use Muensmedia\HyvorRelay\HyvorRelay;
+use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 
 class GetWebhookDeliveriesAction
 {
     use AsAction;
-
-    public function __construct(
-        protected HyvorRelay $relay
-    ) {}
+    use InteractsWithConsoleApi;
 
     public function handle(array $query = []): array
     {
-        return $this->relay->getWebhookDeliveries($query);
+        return $this->request('GET', 'webhooks/deliveries', query: $query);
     }
 }

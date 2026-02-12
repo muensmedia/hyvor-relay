@@ -3,18 +3,15 @@
 namespace Muensmedia\HyvorRelay\Actions\Console\Sends;
 
 use Lorisleiva\Actions\Concerns\AsAction;
-use Muensmedia\HyvorRelay\HyvorRelay;
+use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 
 class GetSendByUuidAction
 {
     use AsAction;
-
-    public function __construct(
-        protected HyvorRelay $relay
-    ) {}
+    use InteractsWithConsoleApi;
 
     public function handle(string $uuid): array
     {
-        return $this->relay->getSendByUuid($uuid);
+        return $this->request('GET', "sends/uuid/{$uuid}");
     }
 }

@@ -3,18 +3,15 @@
 namespace Muensmedia\HyvorRelay\Actions\Console\Webhooks;
 
 use Lorisleiva\Actions\Concerns\AsAction;
-use Muensmedia\HyvorRelay\HyvorRelay;
+use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 
 class DeleteWebhookAction
 {
     use AsAction;
-
-    public function __construct(
-        protected HyvorRelay $relay
-    ) {}
+    use InteractsWithConsoleApi;
 
     public function handle(int $id): array
     {
-        return $this->relay->deleteWebhook($id);
+        return $this->request('DELETE', "webhooks/{$id}");
     }
 }

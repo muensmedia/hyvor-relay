@@ -3,18 +3,18 @@
 namespace Muensmedia\HyvorRelay\Actions\Console\ApiKeys;
 
 use Lorisleiva\Actions\Concerns\AsAction;
-use Muensmedia\HyvorRelay\HyvorRelay;
+use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 
 class CreateApiKeyAction
 {
     use AsAction;
-
-    public function __construct(
-        protected HyvorRelay $relay
-    ) {}
+    use InteractsWithConsoleApi;
 
     public function handle(string $name, array $scopes): array
     {
-        return $this->relay->createApiKey($name, $scopes);
+        return $this->request('POST', 'api-keys', json: [
+            'name' => $name,
+            'scopes' => $scopes,
+        ]);
     }
 }

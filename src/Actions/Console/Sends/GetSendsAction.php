@@ -3,18 +3,15 @@
 namespace Muensmedia\HyvorRelay\Actions\Console\Sends;
 
 use Lorisleiva\Actions\Concerns\AsAction;
-use Muensmedia\HyvorRelay\HyvorRelay;
+use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 
 class GetSendsAction
 {
     use AsAction;
-
-    public function __construct(
-        protected HyvorRelay $relay
-    ) {}
+    use InteractsWithConsoleApi;
 
     public function handle(array $query = []): array
     {
-        return $this->relay->getSends($query);
+        return $this->request('GET', 'sends', query: $query);
     }
 }

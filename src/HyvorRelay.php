@@ -2,183 +2,138 @@
 
 namespace Muensmedia\HyvorRelay;
 
-use Illuminate\Http\Client\Factory;
-use Illuminate\Http\Client\PendingRequest;
-use Muensmedia\HyvorRelay\Exceptions\HyvorRelayApiException;
+use Muensmedia\HyvorRelay\Actions\Console\Analytics\GetAnalyticsSendsChartAction;
+use Muensmedia\HyvorRelay\Actions\Console\Analytics\GetAnalyticsStatsAction;
+use Muensmedia\HyvorRelay\Actions\Console\ApiKeys\CreateApiKeyAction;
+use Muensmedia\HyvorRelay\Actions\Console\ApiKeys\DeleteApiKeyAction;
+use Muensmedia\HyvorRelay\Actions\Console\ApiKeys\GetApiKeysAction;
+use Muensmedia\HyvorRelay\Actions\Console\ApiKeys\UpdateApiKeyAction;
+use Muensmedia\HyvorRelay\Actions\Console\Domains\CreateDomainAction;
+use Muensmedia\HyvorRelay\Actions\Console\Domains\DeleteDomainAction;
+use Muensmedia\HyvorRelay\Actions\Console\Domains\GetDomainAction;
+use Muensmedia\HyvorRelay\Actions\Console\Domains\GetDomainsAction;
+use Muensmedia\HyvorRelay\Actions\Console\Domains\VerifyDomainAction;
+use Muensmedia\HyvorRelay\Actions\Console\Sends\GetSendByIdAction;
+use Muensmedia\HyvorRelay\Actions\Console\Sends\GetSendByUuidAction;
+use Muensmedia\HyvorRelay\Actions\Console\Sends\GetSendsAction;
+use Muensmedia\HyvorRelay\Actions\Console\Sends\SendEmailAction;
+use Muensmedia\HyvorRelay\Actions\Console\Suppressions\DeleteSuppressionAction;
+use Muensmedia\HyvorRelay\Actions\Console\Suppressions\GetSuppressionsAction;
+use Muensmedia\HyvorRelay\Actions\Console\Webhooks\CreateWebhookAction;
+use Muensmedia\HyvorRelay\Actions\Console\Webhooks\DeleteWebhookAction;
+use Muensmedia\HyvorRelay\Actions\Console\Webhooks\GetWebhookDeliveriesAction;
+use Muensmedia\HyvorRelay\Actions\Console\Webhooks\GetWebhooksAction;
+use Muensmedia\HyvorRelay\Actions\Console\Webhooks\UpdateWebhookAction;
 
 class HyvorRelay
 {
-    public function __construct(
-        protected Factory $http
-    ) {}
-
     public function sendEmail(array $payload, ?string $idempotencyKey = null): array
     {
-        $headers = [];
-
-        if ($idempotencyKey !== null && $idempotencyKey !== '') {
-            $headers['X-Idempotency-Key'] = $idempotencyKey;
-        }
-
-        return $this->request('POST', 'sends', json: $payload, headers: $headers);
+        return SendEmailAction::run($payload, $idempotencyKey);
     }
 
     public function getSends(array $query = []): array
     {
-        return $this->request('GET', 'sends', query: $query);
+        return GetSendsAction::run($query);
     }
 
     public function getSendById(int $id): array
     {
-        return $this->request('GET', "sends/{$id}");
+        return GetSendByIdAction::run($id);
     }
 
     public function getSendByUuid(string $uuid): array
     {
-        return $this->request('GET', "sends/uuid/{$uuid}");
+        return GetSendByUuidAction::run($uuid);
     }
 
     public function getDomains(array $query = []): array
     {
-        return $this->request('GET', 'domains', query: $query);
+        return GetDomainsAction::run($query);
     }
 
     public function createDomain(string $domain): array
     {
-        return $this->request('POST', 'domains', json: ['domain' => $domain]);
+        return CreateDomainAction::run($domain);
     }
 
     public function verifyDomain(?int $id = null, ?string $domain = null): array
     {
-        return $this->request('POST', 'domains/verify', json: $this->withoutNullValues([
-            'id' => $id,
-            'domain' => $domain,
-        ]));
+        return VerifyDomainAction::run($id, $domain);
     }
 
     public function getDomain(?int $id = null, ?string $domain = null): array
     {
-        return $this->request('GET', 'domains/by', query: $this->withoutNullValues([
-            'id' => $id,
-            'domain' => $domain,
-        ]));
+        return GetDomainAction::run($id, $domain);
     }
 
     public function deleteDomain(?int $id = null, ?string $domain = null): array
     {
-        return $this->request('DELETE', 'domains', json: $this->withoutNullValues([
-            'id' => $id,
-            'domain' => $domain,
-        ]));
+        return DeleteDomainAction::run($id, $domain);
     }
 
     public function getWebhooks(): array
     {
-        return $this->request('GET', 'webhooks');
+        return GetWebhooksAction::run();
     }
 
     public function createWebhook(string $url, array $events, ?string $description = null): array
     {
-        return $this->request('POST', 'webhooks', json: $this->withoutNullValues([
-            'url' => $url,
-            'events' => $events,
-            'description' => $description,
-        ]));
+        return CreateWebhookAction::run($url, $events, $description);
     }
 
     public function updateWebhook(int $id, array $payload): array
     {
-        return $this->request('PATCH', "webhooks/{$id}", json: $payload);
+        return UpdateWebhookAction::run($id, $payload);
     }
 
     public function deleteWebhook(int $id): array
     {
-        return $this->request('DELETE', "webhooks/{$id}");
+        return DeleteWebhookAction::run($id);
     }
 
     public function getWebhookDeliveries(array $query = []): array
     {
-        return $this->request('GET', 'webhooks/deliveries', query: $query);
+        return GetWebhookDeliveriesAction::run($query);
     }
 
     public function getApiKeys(): array
     {
-        return $this->request('GET', 'api-keys');
+        return GetApiKeysAction::run();
     }
 
     public function createApiKey(string $name, array $scopes): array
     {
-        return $this->request('POST', 'api-keys', json: [
-            'name' => $name,
-            'scopes' => $scopes,
-        ]);
+        return CreateApiKeyAction::run($name, $scopes);
     }
 
     public function updateApiKey(int $id, array $payload): array
     {
-        return $this->request('PATCH', "api-keys/{$id}", json: $payload);
+        return UpdateApiKeyAction::run($id, $payload);
     }
 
     public function deleteApiKey(int $id): array
     {
-        return $this->request('DELETE', "api-keys/{$id}");
+        return DeleteApiKeyAction::run($id);
     }
 
     public function getSuppressions(array $query = []): array
     {
-        return $this->request('GET', 'suppressions', query: $query);
+        return GetSuppressionsAction::run($query);
     }
 
     public function deleteSuppression(int $id): array
     {
-        return $this->request('DELETE', "suppressions/{$id}");
+        return DeleteSuppressionAction::run($id);
     }
 
     public function getAnalyticsStats(?string $period = null): array
     {
-        return $this->request('GET', 'analytics/stats', query: $this->withoutNullValues([
-            'period' => $period,
-        ]));
+        return GetAnalyticsStatsAction::run($period);
     }
 
     public function getAnalyticsSendsChart(): array
     {
-        return $this->request('GET', 'analytics/sends/chart');
-    }
-
-    protected function request(
-        string $method,
-        string $uri,
-        array $query = [],
-        array $json = [],
-        array $headers = []
-    ): array {
-        $response = $this->client($headers)->send(strtoupper($method), ltrim($uri, '/'), [
-            'query' => $query,
-            'json' => $json,
-        ]);
-
-        if (! $response->successful()) {
-            throw HyvorRelayApiException::fromResponse($response, strtoupper($method), $uri);
-        }
-
-        return $response->json() ?? [];
-    }
-
-    protected function client(array $headers = []): PendingRequest
-    {
-        return $this->http
-            ->baseUrl(rtrim((string) config('hyvor-relay.endpoint'), '/').'/api/console')
-            ->acceptJson()
-            ->asJson()
-            ->withToken((string) config('hyvor-relay.api_key'))
-            ->timeout((int) config('hyvor-relay.timeout', 10))
-            ->connectTimeout((int) config('hyvor-relay.connect_timeout', 5))
-            ->withHeaders($headers);
-    }
-
-    protected function withoutNullValues(array $data): array
-    {
-        return array_filter($data, static fn (mixed $value): bool => $value !== null);
+        return GetAnalyticsSendsChartAction::run();
     }
 }

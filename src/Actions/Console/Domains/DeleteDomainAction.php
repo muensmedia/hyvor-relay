@@ -3,18 +3,18 @@
 namespace Muensmedia\HyvorRelay\Actions\Console\Domains;
 
 use Lorisleiva\Actions\Concerns\AsAction;
-use Muensmedia\HyvorRelay\HyvorRelay;
+use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 
 class DeleteDomainAction
 {
     use AsAction;
-
-    public function __construct(
-        protected HyvorRelay $relay
-    ) {}
+    use InteractsWithConsoleApi;
 
     public function handle(?int $id = null, ?string $domain = null): array
     {
-        return $this->relay->deleteDomain($id, $domain);
+        return $this->request('DELETE', 'domains', json: $this->withoutNullValues([
+            'id' => $id,
+            'domain' => $domain,
+        ]));
     }
 }

@@ -3,18 +3,19 @@
 namespace Muensmedia\HyvorRelay\Actions\Console\Webhooks;
 
 use Lorisleiva\Actions\Concerns\AsAction;
-use Muensmedia\HyvorRelay\HyvorRelay;
+use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 
 class CreateWebhookAction
 {
     use AsAction;
-
-    public function __construct(
-        protected HyvorRelay $relay
-    ) {}
+    use InteractsWithConsoleApi;
 
     public function handle(string $url, array $events, ?string $description = null): array
     {
-        return $this->relay->createWebhook($url, $events, $description);
+        return $this->request('POST', 'webhooks', json: $this->withoutNullValues([
+            'url' => $url,
+            'events' => $events,
+            'description' => $description,
+        ]));
     }
 }

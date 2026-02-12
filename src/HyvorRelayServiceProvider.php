@@ -3,6 +3,7 @@
 namespace Muensmedia\HyvorRelay;
 
 use Illuminate\Support\Facades\Mail;
+use Muensmedia\HyvorRelay\Support\Http\HyvorRelayHttpFactory;
 use Muensmedia\HyvorRelay\Transport\HyvorRelayTransportFactory;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
@@ -14,6 +15,7 @@ class HyvorRelayServiceProvider extends PackageServiceProvider
     {
         $this->app->singleton(HyvorRelay::class);
         $this->app->alias(HyvorRelay::class, 'hyvor-relay');
+        $this->app->singleton(HyvorRelayHttpFactory::class);
     }
 
     public function configurePackage(Package $package): void

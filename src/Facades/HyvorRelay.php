@@ -45,9 +45,14 @@ class HyvorRelay extends Facade
         static::getFacadeRoot()->assertRequested($callback);
     }
 
-    public static function assertEndpointRequested(string $method, string $uri, int $times = 1): void
+    public static function assertEndpointRequested(string $facadeMethod, int $times = 1): void
     {
-        static::getFacadeRoot()->assertEndpointRequested($method, $uri, $times);
+        static::getFacadeRoot()->assertCalled($facadeMethod, $times);
+    }
+
+    public static function assertCalled(string $method, int $times = 1): void
+    {
+        static::getFacadeRoot()->assertCalled($method, $times);
     }
 
     public static function assertNothingRequested(): void

@@ -3,18 +3,15 @@
 namespace Muensmedia\HyvorRelay\Actions\Console\ApiKeys;
 
 use Lorisleiva\Actions\Concerns\AsAction;
-use Muensmedia\HyvorRelay\HyvorRelay;
+use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 
 class GetApiKeysAction
 {
     use AsAction;
-
-    public function __construct(
-        protected HyvorRelay $relay
-    ) {}
+    use InteractsWithConsoleApi;
 
     public function handle(): array
     {
-        return $this->relay->getApiKeys();
+        return $this->request('GET', 'api-keys');
     }
 }

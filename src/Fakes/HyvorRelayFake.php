@@ -2,30 +2,23 @@
 
 namespace Muensmedia\HyvorRelay\Fakes;
 
-use Illuminate\Http\Client\Factory;
-use Muensmedia\HyvorRelay\HyvorRelay;
 use PHPUnit\Framework\Assert;
 
-class HyvorRelayFake extends HyvorRelay
+class HyvorRelayFake
 {
     /**
-     * @var array<int, array{method: string, uri: string, query: array, json: array, headers: array}>
+     * @var array<int, array{method: string, arguments: array}>
      */
     protected array $calls = [];
 
     /**
-     * @var array<string, array>
+     * @var array<string, mixed>
      */
     protected array $responses = [];
 
-    public function __construct(?Factory $http = null)
+    public function setResponse(string $method, mixed $response): self
     {
-        parent::__construct($http ?? new Factory());
-    }
-
-    public function setResponse(string $method, string $uri, array $response): self
-    {
-        $this->responses[$this->responseKey($method, $uri)] = $response;
+        $this->responses[$method] = $response;
 
         return $this;
     }
@@ -40,58 +33,38 @@ class HyvorRelayFake extends HyvorRelay
             }
         }
 
-        Assert::fail('Expected a matching Hyvor Relay API request but none was recorded.');
+        Assert::fail('Expected a matching HyvorRelay facade call but none was recorded.');
     }
 
-    public function assertEndpointRequested(string $method, string $uri, int $times = 1): void
+    public function assertCalled(string $method, int $times = 1): void
     {
         $actual = collect($this->calls)
-            ->filter(fn (array $call): bool => $call['method'] === strtoupper($method) && $call['uri'] === ltrim($uri, '/'))
+            ->filter(fn (array $call): bool => $call['method'] === $method)
             ->count();
 
-        Assert::assertSame(
-            $times,
-            $actual,
-            "Expected {$method} {$uri} to be called {$times} time(s), got {$actual}."
-        );
+        Assert::assertSame($times, $actual, "Expected {$method} to be called {$times} time(s), got {$actual}.");
     }
 
     public function assertNothingRequested(): void
     {
-        Assert::assertCount(0, $this->calls, 'Expected no Hyvor Relay API request, but at least one was recorded.');
+        Assert::assertCount(0, $this->calls, 'Expected no HyvorRelay facade calls, but at least one was recorded.');
     }
 
     /**
-     * @return array<int, array{method: string, uri: string, query: array, json: array, headers: array}>
+     * @return array<int, array{method: string, arguments: array}>
      */
     public function calls(): array
     {
         return $this->calls;
     }
 
-    protected function request(
-        string $method,
-        string $uri,
-        array $query = [],
-        array $json = [],
-        array $headers = []
-    ): array {
-        $normalizedMethod = strtoupper($method);
-        $normalizedUri = ltrim($uri, '/');
-
+    public function __call(string $method, array $arguments): mixed
+    {
         $this->calls[] = [
-            'method' => $normalizedMethod,
-            'uri' => $normalizedUri,
-            'query' => $query,
-            'json' => $json,
-            'headers' => $headers,
+            'method' => $method,
+            'arguments' => $arguments,
         ];
 
-        return $this->responses[$this->responseKey($normalizedMethod, $normalizedUri)] ?? [];
-    }
-
-    protected function responseKey(string $method, string $uri): string
-    {
-        return strtoupper($method).' '.ltrim($uri, '/');
+        return $this->responses[$method] ?? [];
     }
 }

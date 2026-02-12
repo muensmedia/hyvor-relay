@@ -3,18 +3,15 @@
 namespace Muensmedia\HyvorRelay\Actions\Console\Analytics;
 
 use Lorisleiva\Actions\Concerns\AsAction;
-use Muensmedia\HyvorRelay\HyvorRelay;
+use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 
 class GetAnalyticsSendsChartAction
 {
     use AsAction;
-
-    public function __construct(
-        protected HyvorRelay $relay
-    ) {}
+    use InteractsWithConsoleApi;
 
     public function handle(): array
     {
-        return $this->relay->getAnalyticsSendsChart();
+        return $this->request('GET', 'analytics/sends/chart');
     }
 }
