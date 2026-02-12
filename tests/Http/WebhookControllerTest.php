@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Event;
 use Muensmedia\HyvorRelay\Enum\EventTypes;
 use Muensmedia\HyvorRelay\Events\Webhooks\SendRecipientAcceptedReceived;
+use Muensmedia\HyvorRelay\Tests\Support\MockWebhooks;
 
 function postSignedWebhook(array $body)
 {
@@ -18,60 +19,7 @@ function postSignedWebhook(array $body)
 it('dispatches the mapped laravel event with typed dto payload', function () {
     Event::fake();
 
-    $response = postSignedWebhook([
-        'event' => EventTypes::SEND_RECIPIENT_ACCEPTED->value,
-        'payload' => [
-            'send' => [
-                'id' => 16,
-                'uuid' => '15ff0c65-49bb-435a-9827-6a093153ef20',
-                'created_at' => 1770884881,
-                'from_address' => 'app@example.test',
-                'from_name' => null,
-                'subject' => 'Test Mail',
-                'body_html' => null,
-                'body_text' => null,
-                'headers' => [],
-                'raw' => '',
-                'size_bytes' => 1654,
-                'queued' => false,
-                'send_after' => 1770884881,
-                'recipients' => [
-                    [
-                        'id' => 16,
-                        'type' => 'to',
-                        'address' => 'john@example.test',
-                        'name' => '',
-                        'status' => 'accepted',
-                        'try_count' => 1,
-                    ],
-                ],
-                'attempts' => [],
-                'feedback' => [],
-            ],
-            'recipient' => [
-                'id' => 16,
-                'type' => 'to',
-                'address' => 'john@example.test',
-                'name' => '',
-                'status' => 'accepted',
-                'try_count' => 1,
-            ],
-            'attempt' => [
-                'id' => 16,
-                'created_at' => 1770884881,
-                'status' => 'accepted',
-                'try_count' => 1,
-                'domain' => 'example.test',
-                'resolved_mx_hosts' => ['mx.example.test'],
-                'responded_mx_host' => 'mx.example.test',
-                'smtp_conversations' => [],
-                'recipient_ids' => [16],
-                'recipients' => [],
-                'duration_ms' => 1192,
-                'error' => null,
-            ],
-        ],
-    ]);
+    $response = postSignedWebhook(MockWebhooks::accepted());
 
     $response->assertNoContent();
 
@@ -84,10 +32,7 @@ it('dispatches the mapped laravel event with typed dto payload', function () {
 it('returns accepted for unsupported webhook events', function () {
     Event::fake();
 
-    $response = postSignedWebhook([
-        'event' => 'unsupported.event',
-        'payload' => [],
-    ]);
+    $response = postSignedWebhook(MockWebhooks::unsupported());
 
     $response->assertNoContent();
     Event::assertNotDispatched(SendRecipientAcceptedReceived::class);
