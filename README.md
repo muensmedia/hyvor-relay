@@ -10,6 +10,7 @@ __[TOC]__
 - Simple `.env` configuration (`HYVOR_RELAY_API_KEY`, `HYVOR_RELAY_ENDPOINT`)
 - Set Hyvor Relay as the default mailer, or keep your default (SMTP, SES, etc.) and use Hyvor only for specific emails
 - Webhook event reference + Laravel listener examples: [docs/webhook-events.md](docs/webhook-events.md)
+- Queue/retry best practices for Console API usage: [docs/queueing.md](docs/queueing.md)
 
 ## Requirements
 
