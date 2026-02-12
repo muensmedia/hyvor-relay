@@ -10,10 +10,12 @@ it('uses hyvor-relay transport', function () {
 });
 
 it('should send mail without actually sending it (Mail fake)', function () {
-    Mail::fake();
+//    Mail::fake();
 
-    $to = fake()->safeEmail();
-    $from = fake()->safeEmail();
+//    $to = fake()->safeEmail();
+//    $from = fake()->safeEmail();
+    $to = 'i.schlenther@muensmedia.de';
+    $from = 'app@beyond-phishing.de';
 
     $mailable = new TestHtmlMailable('<html lang="de"><body>HTML String</body></html>', 'Plain String')
         ->to($to)
