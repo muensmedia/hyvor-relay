@@ -1,6 +1,9 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Muensmedia\HyvorRelay\Http\Controllers\WebhookController;
+use Muensmedia\HyvorRelay\Http\Middleware\VerifyWebhookSignature;
+use Muensmedia\HyvorRelay\Http\Middleware\VerifyWebhookToken;
 
 /*
 |--------------------------------------------------------------------------
@@ -17,5 +20,10 @@ Route::prefix('api/hyvor-relay/v1')
     ->withoutMiddleware('throttle:api')
     ->name('hyvor-relay.api.v1.')
     ->group(function () {
-        Route::post('/webhook', 'SendController@store');
+        Route::post('/webhook', WebhookController::class)
+            ->middleware([
+                VerifyWebhookToken::class,
+                VerifyWebhookSignature::class,
+            ])
+            ->name('webhook');
     });
