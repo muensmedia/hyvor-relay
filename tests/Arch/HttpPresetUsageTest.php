@@ -1,5 +1,7 @@
 <?php
 
+use Muensmedia\HyvorRelay\Actions\Console\Sends\SendEmailAction;
+
 it('uses HyvorRelayHttp preset instead of direct Http facade in src', function () {
     $allowed = [
         realpath(__DIR__.'/../../src/Facades/HyvorRelayHttp.php'),
@@ -28,7 +30,7 @@ it('uses HyvorRelayHttp preset instead of direct Http facade in src', function (
 });
 
 it('prevents stray HyvorRelay console http requests by default in tests', function () {
-    expect(fn () => \Muensmedia\HyvorRelay\Actions\Console\Sends\SendEmailAction::run([
+    expect(fn () => SendEmailAction::run([
         'from' => 'app@example.test',
         'to' => 'john@example.test',
         'subject' => 'Hello',

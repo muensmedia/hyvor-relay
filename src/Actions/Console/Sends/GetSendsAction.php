@@ -2,7 +2,7 @@
 
 namespace Muensmedia\HyvorRelay\Actions\Console\Sends;
 
-use Lorisleiva\Actions\Concerns\AsAction;
+use Lorisleiva\Actions\Concerns\AsObject;
 use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Objects\SendData;
 use Spatie\LaravelData\DataCollection;
@@ -12,14 +12,13 @@ use Spatie\LaravelData\DataCollection;
  */
 class GetSendsAction
 {
-    use AsAction;
-    use InteractsWithConsoleApi;
+    use AsObject, InteractsWithConsoleApi;
 
     public function handle(array $query = []): DataCollection
     {
-        return $this->toCollection(
-            SendData::class,
-            $this->request('GET', 'sends', query: $query)
+        return SendData::collect(
+            $this->request('GET', 'sends', query: $query),
+            DataCollection::class
         );
     }
 }

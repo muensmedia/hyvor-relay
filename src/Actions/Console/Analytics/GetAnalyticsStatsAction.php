@@ -2,7 +2,7 @@
 
 namespace Muensmedia\HyvorRelay\Actions\Console\Analytics;
 
-use Lorisleiva\Actions\Concerns\AsAction;
+use Lorisleiva\Actions\Concerns\AsObject;
 use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Responses\AnalyticsStatsData;
 
@@ -11,13 +11,11 @@ use Muensmedia\HyvorRelay\Data\Console\Responses\AnalyticsStatsData;
  */
 class GetAnalyticsStatsAction
 {
-    use AsAction;
-    use InteractsWithConsoleApi;
+    use AsObject, InteractsWithConsoleApi;
 
     public function handle(?string $period = null): AnalyticsStatsData
     {
-        return $this->toData(
-            AnalyticsStatsData::class,
+        return AnalyticsStatsData::from(
             $this->request('GET', 'analytics/stats', query: $this->withoutNullValues([
                 'period' => $period,
             ]))

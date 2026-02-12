@@ -12,17 +12,25 @@ class HyvorRelayApiException extends Exception
         public string $method,
         public string $uri,
         public mixed $responseBody,
+        public ?string $source = null,
     ) {
-        parent::__construct("Hyvor Relay API request failed: {$method} {$uri} ({$status})");
+        $sourcePrefix = $source ? "[{$source}] " : '';
+        parent::__construct("{$sourcePrefix}Hyvor Relay API request failed: {$method} {$uri} ({$status})");
     }
 
-    public static function fromResponse(Response $response, string $method, string $uri): self
+    public static function fromResponse(
+        Response $response,
+        string $method,
+        string $uri,
+        ?string $source = null
+    ): self
     {
         return new self(
             status: $response->status(),
             method: $method,
             uri: $uri,
             responseBody: $response->json() ?? $response->body(),
+            source: $source,
         );
     }
 }

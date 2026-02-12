@@ -2,7 +2,7 @@
 
 namespace Muensmedia\HyvorRelay\Actions\Console\ApiKeys;
 
-use Lorisleiva\Actions\Concerns\AsAction;
+use Lorisleiva\Actions\Concerns\AsObject;
 use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Objects\ApiKeyData;
 
@@ -11,13 +11,11 @@ use Muensmedia\HyvorRelay\Data\Console\Objects\ApiKeyData;
  */
 class UpdateApiKeyAction
 {
-    use AsAction;
-    use InteractsWithConsoleApi;
+    use AsObject, InteractsWithConsoleApi;
 
     public function handle(int $id, array $payload): ApiKeyData
     {
-        return $this->toData(
-            ApiKeyData::class,
+        return ApiKeyData::from(
             $this->request('PATCH', "api-keys/{$id}", json: $payload)
         );
     }

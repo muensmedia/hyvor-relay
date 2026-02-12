@@ -2,7 +2,7 @@
 
 namespace Muensmedia\HyvorRelay\Actions\Console\Domains;
 
-use Lorisleiva\Actions\Concerns\AsAction;
+use Lorisleiva\Actions\Concerns\AsObject;
 use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Objects\DomainData;
 use Spatie\LaravelData\DataCollection;
@@ -12,14 +12,13 @@ use Spatie\LaravelData\DataCollection;
  */
 class GetDomainsAction
 {
-    use AsAction;
-    use InteractsWithConsoleApi;
+    use AsObject, InteractsWithConsoleApi;
 
     public function handle(array $query = []): DataCollection
     {
-        return $this->toCollection(
-            DomainData::class,
-            $this->request('GET', 'domains', query: $query)
+        return DomainData::collect(
+            $this->request('GET', 'domains', query: $query),
+            DataCollection::class
         );
     }
 }

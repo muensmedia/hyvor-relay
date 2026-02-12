@@ -2,7 +2,7 @@
 
 namespace Muensmedia\HyvorRelay\Actions\Console\ApiKeys;
 
-use Lorisleiva\Actions\Concerns\AsAction;
+use Lorisleiva\Actions\Concerns\AsObject;
 use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Responses\EmptyResponseData;
 
@@ -11,8 +11,7 @@ use Muensmedia\HyvorRelay\Data\Console\Responses\EmptyResponseData;
  */
 class DeleteApiKeyAction
 {
-    use AsAction;
-    use InteractsWithConsoleApi;
+    use AsObject, InteractsWithConsoleApi;
 
     public function handle(int $id): EmptyResponseData
     {

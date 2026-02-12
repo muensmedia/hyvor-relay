@@ -2,7 +2,7 @@
 
 namespace Muensmedia\HyvorRelay\Actions\Console\Sends;
 
-use Lorisleiva\Actions\Concerns\AsAction;
+use Lorisleiva\Actions\Concerns\AsObject;
 use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Responses\SendEmailResponseData;
 
@@ -11,8 +11,7 @@ use Muensmedia\HyvorRelay\Data\Console\Responses\SendEmailResponseData;
  */
 class SendEmailAction
 {
-    use AsAction;
-    use InteractsWithConsoleApi;
+    use AsObject, InteractsWithConsoleApi;
 
     public function handle(array $payload, ?string $idempotencyKey = null): SendEmailResponseData
     {
@@ -22,8 +21,7 @@ class SendEmailAction
             $headers['X-Idempotency-Key'] = $idempotencyKey;
         }
 
-        return $this->toData(
-            SendEmailResponseData::class,
+        return SendEmailResponseData::from(
             $this->request('POST', 'sends', json: $payload, headers: $headers)
         );
     }

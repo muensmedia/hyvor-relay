@@ -2,7 +2,7 @@
 
 namespace Muensmedia\HyvorRelay\Actions\Console\Sends;
 
-use Lorisleiva\Actions\Concerns\AsAction;
+use Lorisleiva\Actions\Concerns\AsObject;
 use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Objects\SendData;
 
@@ -11,13 +11,11 @@ use Muensmedia\HyvorRelay\Data\Console\Objects\SendData;
  */
 class GetSendByIdAction
 {
-    use AsAction;
-    use InteractsWithConsoleApi;
+    use AsObject, InteractsWithConsoleApi;
 
     public function handle(int $id): SendData
     {
-        return $this->toData(
-            SendData::class,
+        return SendData::from(
             $this->request('GET', "sends/{$id}")
         );
     }

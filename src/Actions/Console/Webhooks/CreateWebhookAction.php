@@ -2,7 +2,7 @@
 
 namespace Muensmedia\HyvorRelay\Actions\Console\Webhooks;
 
-use Lorisleiva\Actions\Concerns\AsAction;
+use Lorisleiva\Actions\Concerns\AsObject;
 use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Objects\WebhookData;
 
@@ -11,13 +11,11 @@ use Muensmedia\HyvorRelay\Data\Console\Objects\WebhookData;
  */
 class CreateWebhookAction
 {
-    use AsAction;
-    use InteractsWithConsoleApi;
+    use AsObject, InteractsWithConsoleApi;
 
     public function handle(string $url, array $events, ?string $description = null): WebhookData
     {
-        return $this->toData(
-            WebhookData::class,
+        return WebhookData::from(
             $this->request('POST', 'webhooks', json: $this->withoutNullValues([
                 'url' => $url,
                 'events' => $events,

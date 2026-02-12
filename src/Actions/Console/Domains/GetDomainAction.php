@@ -2,7 +2,7 @@
 
 namespace Muensmedia\HyvorRelay\Actions\Console\Domains;
 
-use Lorisleiva\Actions\Concerns\AsAction;
+use Lorisleiva\Actions\Concerns\AsObject;
 use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Objects\DomainData;
 
@@ -11,13 +11,11 @@ use Muensmedia\HyvorRelay\Data\Console\Objects\DomainData;
  */
 class GetDomainAction
 {
-    use AsAction;
-    use InteractsWithConsoleApi;
+    use AsObject, InteractsWithConsoleApi;
 
     public function handle(?int $id = null, ?string $domain = null): DomainData
     {
-        return $this->toData(
-            DomainData::class,
+        return DomainData::from(
             $this->request('GET', 'domains/by', query: $this->withoutNullValues([
                 'id' => $id,
                 'domain' => $domain,

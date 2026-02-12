@@ -2,7 +2,7 @@
 
 namespace Muensmedia\HyvorRelay\Actions\Console\Webhooks;
 
-use Lorisleiva\Actions\Concerns\AsAction;
+use Lorisleiva\Actions\Concerns\AsObject;
 use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
 use Muensmedia\HyvorRelay\Data\Console\Objects\WebhookData;
 use Spatie\LaravelData\DataCollection;
@@ -12,14 +12,13 @@ use Spatie\LaravelData\DataCollection;
  */
 class GetWebhooksAction
 {
-    use AsAction;
-    use InteractsWithConsoleApi;
+    use AsObject, InteractsWithConsoleApi;
 
     public function handle(): DataCollection
     {
-        return $this->toCollection(
-            WebhookData::class,
-            $this->request('GET', 'webhooks')
+        return WebhookData::collect(
+            $this->request('GET', 'webhooks'),
+            DataCollection::class
         );
     }
 }
