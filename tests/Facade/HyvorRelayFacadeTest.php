@@ -24,3 +24,13 @@ it('can assert that no api calls were made', function () {
 
     HyvorRelay::assertNothingRequested();
 });
+
+it('can fake webhook signature helper calls via facade', function () {
+    HyvorRelay::fake()
+        ->setResponse('verifyWebhookSignature', true);
+
+    $verified = HyvorRelay::verifyWebhookSignature('{}', 'sig');
+
+    expect($verified)->toBeTrue();
+    HyvorRelay::assertCalled('verifyWebhookSignature');
+});

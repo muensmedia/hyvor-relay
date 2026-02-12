@@ -211,4 +211,35 @@ class HyvorRelay
     {
         return GetAnalyticsSendsChartAction::run();
     }
+
+    /**
+     * Create a HMAC-SHA256 signature for a raw webhook JSON payload.
+     */
+    public function signWebhookPayload(string $rawBody, ?string $secret = null): string
+    {
+        $resolvedSecret = $secret ?? (string) config('hyvor-relay.webhook_secret');
+
+        return hash_hmac('sha256', $rawBody, $resolvedSecret);
+    }
+
+    /**
+     * Verify an incoming webhook signature against the raw payload.
+     */
+    public function verifyWebhookSignature(string $rawBody, string $signature, ?string $secret = null): bool
+    {
+        $normalizedSignature = trim($signature);
+
+        if (str_starts_with($normalizedSignature, 'sha256=')) {
+            $normalizedSignature = substr($normalizedSignature, 7);
+        }
+
+        if ($normalizedSignature === '') {
+            return false;
+        }
+
+        return hash_equals(
+            $this->signWebhookPayload($rawBody, $secret),
+            $normalizedSignature
+        );
+    }
 }

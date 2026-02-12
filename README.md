@@ -10,6 +10,7 @@ __[TOC]__
 - Environment variable reference: [docs/environment.md](docs/environment.md)
 - Set Hyvor Relay as the default mailer, or keep your default (SMTP, SES, etc.) and use Hyvor only for specific emails
 - Webhook event reference + Laravel listener examples: [docs/webhook-events.md](docs/webhook-events.md)
+- Webhook signature verification (helpers, middleware, multi-route setup): [docs/webhook-signatures.md](docs/webhook-signatures.md)
 - Queue/retry best practices for Console API usage: [docs/queueing.md](docs/queueing.md)
 
 ## Requirements

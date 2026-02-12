@@ -30,6 +30,8 @@ use Muensmedia\HyvorRelay\Fakes\HyvorRelayFake;
  * @method static \Muensmedia\HyvorRelay\Data\Console\Responses\EmptyResponseData deleteSuppression(int $id)
  * @method static \Muensmedia\HyvorRelay\Data\Console\Responses\AnalyticsStatsData getAnalyticsStats(?string $period = null)
  * @method static \Muensmedia\HyvorRelay\Data\Console\Responses\AnalyticsSendsChartData getAnalyticsSendsChart()
+ * @method static string signWebhookPayload(string $rawBody, ?string $secret = null)
+ * @method static bool verifyWebhookSignature(string $rawBody, string $signature, ?string $secret = null)
  */
 class HyvorRelay extends Facade
 {
