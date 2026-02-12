@@ -38,7 +38,7 @@ use Spatie\LaravelData\DataCollection;
 class HyvorRelay
 {
     /**
-     * Queue an email via the Console API.
+     * Send an email via the Console API.
      */
     public function sendEmail(array $payload, ?string $idempotencyKey = null): SendEmailResponseData
     {
