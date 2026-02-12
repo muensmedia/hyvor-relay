@@ -14,6 +14,7 @@ it('should send mail without actually sending it (Mail fake)', function () {
 
     $to = fake()->safeEmail();
     $from = fake()->safeEmail();
+
     $mailable = new TestHtmlMailable('<html lang="de"><body>HTML String</body></html>', 'Plain String')
         ->to($to)
         ->subject('Test Mail')
