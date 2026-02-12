@@ -24,115 +24,190 @@ use Muensmedia\HyvorRelay\Actions\Console\Webhooks\DeleteWebhookAction;
 use Muensmedia\HyvorRelay\Actions\Console\Webhooks\GetWebhookDeliveriesAction;
 use Muensmedia\HyvorRelay\Actions\Console\Webhooks\GetWebhooksAction;
 use Muensmedia\HyvorRelay\Actions\Console\Webhooks\UpdateWebhookAction;
+use Muensmedia\HyvorRelay\Data\Console\Objects\ApiKeyData;
+use Muensmedia\HyvorRelay\Data\Console\Objects\DomainData;
+use Muensmedia\HyvorRelay\Data\Console\Objects\SendData;
+use Muensmedia\HyvorRelay\Data\Console\Objects\WebhookData;
+use Muensmedia\HyvorRelay\Data\Console\Responses\AnalyticsSendsChartData;
+use Muensmedia\HyvorRelay\Data\Console\Responses\AnalyticsStatsData;
+use Muensmedia\HyvorRelay\Data\Console\Responses\EmptyResponseData;
+use Muensmedia\HyvorRelay\Data\Console\Responses\SendEmailResponseData;
+use Spatie\LaravelData\DataCollection;
 
 class HyvorRelay
 {
-    public function sendEmail(array $payload, ?string $idempotencyKey = null): array
+    /**
+     * Queue an email via the Console API.
+     */
+    public function sendEmail(array $payload, ?string $idempotencyKey = null): SendEmailResponseData
     {
         return SendEmailAction::run($payload, $idempotencyKey);
     }
 
-    public function getSends(array $query = []): array
+    /**
+     * List sends with optional filtering and pagination parameters.
+     */
+    public function getSends(array $query = []): DataCollection
     {
         return GetSendsAction::run($query);
     }
 
-    public function getSendById(int $id): array
+    /**
+     * Fetch a single send by numeric ID.
+     */
+    public function getSendById(int $id): SendData
     {
         return GetSendByIdAction::run($id);
     }
 
-    public function getSendByUuid(string $uuid): array
+    /**
+     * Fetch a single send by UUID.
+     */
+    public function getSendByUuid(string $uuid): SendData
     {
         return GetSendByUuidAction::run($uuid);
     }
 
-    public function getDomains(array $query = []): array
+    /**
+     * List domains for the current project.
+     */
+    public function getDomains(array $query = []): DataCollection
     {
         return GetDomainsAction::run($query);
     }
 
-    public function createDomain(string $domain): array
+    /**
+     * Create a new sending domain.
+     */
+    public function createDomain(string $domain): DomainData
     {
         return CreateDomainAction::run($domain);
     }
 
-    public function verifyDomain(?int $id = null, ?string $domain = null): array
+    /**
+     * Trigger domain verification by ID or domain name.
+     */
+    public function verifyDomain(?int $id = null, ?string $domain = null): DomainData
     {
         return VerifyDomainAction::run($id, $domain);
     }
 
-    public function getDomain(?int $id = null, ?string $domain = null): array
+    /**
+     * Fetch a domain by ID or domain name.
+     */
+    public function getDomain(?int $id = null, ?string $domain = null): DomainData
     {
         return GetDomainAction::run($id, $domain);
     }
 
-    public function deleteDomain(?int $id = null, ?string $domain = null): array
+    /**
+     * Delete a domain by ID or domain name.
+     */
+    public function deleteDomain(?int $id = null, ?string $domain = null): EmptyResponseData
     {
         return DeleteDomainAction::run($id, $domain);
     }
 
-    public function getWebhooks(): array
+    /**
+     * List configured webhooks.
+     */
+    public function getWebhooks(): DataCollection
     {
         return GetWebhooksAction::run();
     }
 
-    public function createWebhook(string $url, array $events, ?string $description = null): array
+    /**
+     * Create a new webhook endpoint configuration.
+     */
+    public function createWebhook(string $url, array $events, ?string $description = null): WebhookData
     {
         return CreateWebhookAction::run($url, $events, $description);
     }
 
-    public function updateWebhook(int $id, array $payload): array
+    /**
+     * Update an existing webhook configuration.
+     */
+    public function updateWebhook(int $id, array $payload): WebhookData
     {
         return UpdateWebhookAction::run($id, $payload);
     }
 
-    public function deleteWebhook(int $id): array
+    /**
+     * Delete a webhook by ID.
+     */
+    public function deleteWebhook(int $id): EmptyResponseData
     {
         return DeleteWebhookAction::run($id);
     }
 
-    public function getWebhookDeliveries(array $query = []): array
+    /**
+     * List webhook delivery attempts.
+     */
+    public function getWebhookDeliveries(array $query = []): DataCollection
     {
         return GetWebhookDeliveriesAction::run($query);
     }
 
-    public function getApiKeys(): array
+    /**
+     * List API keys in the current project.
+     */
+    public function getApiKeys(): DataCollection
     {
         return GetApiKeysAction::run();
     }
 
-    public function createApiKey(string $name, array $scopes): array
+    /**
+     * Create a new API key with scopes.
+     */
+    public function createApiKey(string $name, array $scopes): ApiKeyData
     {
         return CreateApiKeyAction::run($name, $scopes);
     }
 
-    public function updateApiKey(int $id, array $payload): array
+    /**
+     * Update an API key by ID.
+     */
+    public function updateApiKey(int $id, array $payload): ApiKeyData
     {
         return UpdateApiKeyAction::run($id, $payload);
     }
 
-    public function deleteApiKey(int $id): array
+    /**
+     * Delete an API key by ID.
+     */
+    public function deleteApiKey(int $id): EmptyResponseData
     {
         return DeleteApiKeyAction::run($id);
     }
 
-    public function getSuppressions(array $query = []): array
+    /**
+     * List suppression entries with optional filters.
+     */
+    public function getSuppressions(array $query = []): DataCollection
     {
         return GetSuppressionsAction::run($query);
     }
 
-    public function deleteSuppression(int $id): array
+    /**
+     * Delete a suppression entry by ID.
+     */
+    public function deleteSuppression(int $id): EmptyResponseData
     {
         return DeleteSuppressionAction::run($id);
     }
 
-    public function getAnalyticsStats(?string $period = null): array
+    /**
+     * Fetch aggregate analytics statistics.
+     */
+    public function getAnalyticsStats(?string $period = null): AnalyticsStatsData
     {
         return GetAnalyticsStatsAction::run($period);
     }
 
-    public function getAnalyticsSendsChart(): array
+    /**
+     * Fetch analytics chart data for sends over time.
+     */
+    public function getAnalyticsSendsChart(): AnalyticsSendsChartData
     {
         return GetAnalyticsSendsChartAction::run();
     }

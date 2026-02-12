@@ -3,12 +3,21 @@
 namespace Muensmedia\HyvorRelay\Tests;
 
 use Lorisleiva\Actions\ActionServiceProvider;
+use Muensmedia\HyvorRelay\Facades\HyvorRelayHttp;
 use Muensmedia\HyvorRelay\HyvorRelayServiceProvider;
 use Orchestra\Testbench\TestCase as Orchestra;
 use Spatie\LaravelData\LaravelDataServiceProvider;
 
 class TestCase extends Orchestra
 {
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        // Never allow real outgoing HTTP calls in tests unless explicitly faked.
+        HyvorRelayHttp::preventStrayRequests();
+    }
+
     protected function getPackageProviders($app): array
     {
         return [

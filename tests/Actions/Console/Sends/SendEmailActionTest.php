@@ -23,7 +23,7 @@ it('sends request via action with idempotency header', function () {
         'body_text' => 'Hi',
     ], 'welcome-7');
 
-    expect($result['id'])->toBe(7);
+    expect($result->id)->toBe(7);
 
     expect($capturedRequest)->not->toBeNull();
     expect($capturedRequest->method())->toBe('POST');

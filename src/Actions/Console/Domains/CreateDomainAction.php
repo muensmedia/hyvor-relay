@@ -4,14 +4,21 @@ namespace Muensmedia\HyvorRelay\Actions\Console\Domains;
 
 use Lorisleiva\Actions\Concerns\AsAction;
 use Muensmedia\HyvorRelay\Actions\Console\Concerns\InteractsWithConsoleApi;
+use Muensmedia\HyvorRelay\Data\Console\Objects\DomainData;
 
+/**
+ * @see https://relay.hyvor.com/docs/console-api#create-domain
+ */
 class CreateDomainAction
 {
     use AsAction;
     use InteractsWithConsoleApi;
 
-    public function handle(string $domain): array
+    public function handle(string $domain): DomainData
     {
-        return $this->request('POST', 'domains', json: ['domain' => $domain]);
+        return $this->toData(
+            DomainData::class,
+            $this->request('POST', 'domains', json: ['domain' => $domain])
+        );
     }
 }

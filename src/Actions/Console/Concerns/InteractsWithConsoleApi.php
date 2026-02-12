@@ -4,6 +4,8 @@ namespace Muensmedia\HyvorRelay\Actions\Console\Concerns;
 
 use Muensmedia\HyvorRelay\Exceptions\HyvorRelayApiException;
 use Muensmedia\HyvorRelay\Facades\HyvorRelayHttp;
+use Spatie\LaravelData\Data;
+use Spatie\LaravelData\DataCollection;
 
 trait InteractsWithConsoleApi
 {
@@ -36,5 +38,26 @@ trait InteractsWithConsoleApi
     protected function withoutNullValues(array $data): array
     {
         return array_filter($data, static fn (mixed $value): bool => $value !== null);
+    }
+
+    /**
+     * @template TData of Data
+     *
+     * @param  class-string<TData>  $class
+     * @return TData
+     */
+    protected function toData(string $class, array $payload): Data
+    {
+        return $class::from($payload);
+    }
+
+    /**
+     * @template TData of Data
+     *
+     * @param  class-string<TData>  $class
+     */
+    protected function toCollection(string $class, array $payload): DataCollection
+    {
+        return $class::collect($payload, DataCollection::class);
     }
 }
