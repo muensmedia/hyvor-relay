@@ -1,53 +1,71 @@
-# Hyvor Relay (Laravel mail transport)
+<div align="center">
+<img src="./docs/relay.svg" width="200"  alt="Relay Logo"/>
 
-A Laravel package that adds a custom mail transport (`hyvor-relay`) to send emails through a Hyvor Relay endpoint (Hyvor-hosted or self-hosted).
+# Hyvor Relay Laravel Integration<br/>A full Laravel integration for [Hyvor Relay](https://relay.hyvor.com/).
 
-__[TOC]__
+</div>
 
-## What you get
 
-- A Laravel mail transport driver: `hyvor-relay`
-- Simple `.env` configuration (`HYVOR_RELAY_API_KEY`, `HYVOR_RELAY_ENDPOINT`)
-- Set Hyvor Relay as the default mailer, or keep your default (SMTP, SES, etc.) and use Hyvor only for specific emails
-- Webhook event reference + Laravel listener examples: [docs/webhook-events.md](docs/webhook-events.md)
+This package gives you:
+
+- `hyvor-relay` mail transport driver
+- typed Console API client via `HyvorRelay` service + facade
+- DTO-based responses and webhook payloads via `spatie/laravel-data`
+- webhook route + signature validation middleware
+- one Laravel event per Hyvor webhook event
+- facade fakes/assertions for tests
+
+## Feature Highlights
+
+- Send email through Hyvor Relay transport or Console API
+- Manage domains, webhooks, API keys, suppressions, and analytics via facade methods
+- Split API keys by use-case: `general`, `send`, `transport`
+- Strong typing across requests and responses (DTOs instead of raw arrays)
+- Built-in webhook signature helpers: sign + verify
+- HTTP preset for package requests (JSON, user-agent, timeout)
+- Architecture tests to prevent stray HTTP usage outside `HyvorRelayHttp`
+
+## Documentation
+
+Start here for integration details:
+
+- [docs/environment.md](docs/environment.md) - environment variables and API key fallback behavior
+- [docs/webhooks.md](docs/webhooks.md) - webhook route, signature validation, and middleware usage
+- [docs/webhook-events.md](docs/webhook-events.md) - all webhook events and Laravel listener patterns
+- [docs/queueing.md](docs/queueing.md) - retry, backoff, and idempotency recommendations
+- [CONTRIBUTING.md](CONTRIBUTING.md) - contributor workflow, commit schema, setup, tests, linting
 
 ## Requirements
 
 - PHP `^8.5`
 - Laravel `^12`
-- A Hyvor Relay API key and endpoint
 
-## Installation (Composer / Packagist)
+## Installation
 
 ```bash
 composer require muensmedia/hyvor-relay
-```
-
-Publish the config (optional, recommended):
-
-```bash
 php artisan vendor:publish --tag=hyvor-relay-config
 ```
 
 ## Configuration
 
-Set the API key and endpoint in your Laravel app `.env`:
+See full env docs here: [docs/environment.md](docs/environment.md)
+
+Minimal setup:
 
 ```dotenv
-HYVOR_RELAY_API_KEY="your-api-key"
 HYVOR_RELAY_ENDPOINT="https://relay.hyvor.com"
+HYVOR_RELAY_API_KEY_GENERAL="<your_api_key>"
 ```
 
-Notes:
+Optional key split:
 
-- `HYVOR_RELAY_ENDPOINT` must be the base URL (no trailing `/api/...` path). The transport will call `POST {endpoint}/api/console/sends`.
-- For a self-hosted Relay instance, set `HYVOR_RELAY_ENDPOINT` to your server URL.
+- `HYVOR_RELAY_API_KEY_SEND` (Console sends endpoints)
+- `HYVOR_RELAY_API_KEY_TRANSPORT` (mail transport)
 
-## Usage
+If optional keys are not set, they fallback to `HYVOR_RELAY_API_KEY_GENERAL`.
 
-The package registers a mail transport driver named `hyvor-relay`. To use it, configure a Laravel mailer that uses this transport.
-
-### Option A: use Hyvor Relay as the default mailer
+## Mail Transport Usage
 
 `config/mail.php`:
 
@@ -61,123 +79,84 @@ The package registers a mail transport driver named `hyvor-relay`. To use it, co
 ],
 ```
 
-`.env`:
-
-```dotenv
-MAIL_MAILER=hyvor
-```
-
-Now any mail sent by Laravel will go through Hyvor Relay:
+Then send as usual with Laravel Mail.
 
 ```php
 use Illuminate\Support\Facades\Mail;
 
-Mail::to('user@example.com')->send(new \App\Mail\WelcomeMail());
+Mail::mailer('hyvor')->to('user@example.com')->send(new \App\Mail\WelcomeMail());
 ```
 
-### Option B: keep your default mailer, use Hyvor only where needed
+This is the preferred path if you already use Laravel Mailables.
 
-If your app default mailer is something else (for example `smtp`), you can still keep a dedicated `hyvor` mailer and use it only for specific emails.
+## Console API Usage (Facade)
 
-Example `config/mail.php`:
+Use the facade as the package's public API. Actions are internal implementation details.
+Use this when you want direct API access beyond Laravel Mail transport.
 
 ```php
-'default' => env('MAIL_MAILER', 'smtp'),
+use Muensmedia\HyvorRelay\Facades\HyvorRelay;
+use Muensmedia\HyvorRelay\Data\Console\Requests\SendEmailPayloadData;
 
-'mailers' => [
-    'smtp' => [
-        'transport' => 'smtp',
-        'host' => env('MAIL_HOST'),
-        'port' => env('MAIL_PORT', 587),
-        'encryption' => env('MAIL_ENCRYPTION', 'tls'),
-        'username' => env('MAIL_USERNAME'),
-        'password' => env('MAIL_PASSWORD'),
-        'timeout' => null,
-        'local_domain' => env('MAIL_EHLO_DOMAIN'),
-    ],
+$response = HyvorRelay::sendEmail(SendEmailPayloadData::from([
+    'from' => 'app@example.com',
+    'to' => 'user@example.com',
+    'subject' => 'Welcome',
+    'body_text' => 'Hello from Relay',
+]), 'welcome-email-123');
 
-    'hyvor' => [
-        'transport' => 'hyvor-relay',
-    ],
-],
+$domains = HyvorRelay::getDomains();
+$stats = HyvorRelay::getAnalyticsStats('7d');
 ```
 
-Then send via Hyvor Relay explicitly:
+The package exposes facade methods for:
+
+- Sends: send, list, get by ID/UUID
+- Domains: list, create, verify, get, delete
+- Webhooks: list, create, update, delete, list deliveries
+- API keys: list, create, update, delete
+- Suppressions: list, delete
+- Analytics: stats, sends chart
+
+## Webhooks
+
+Default route:
+
+- `POST /api/hyvor-relay/v1/webhook`
+- middleware: `VerifyWebhookSignature`
+- unknown events return `204`
+
+For each supported Hyvor webhook event, the package dispatches a typed Laravel event with a DTO payload.
+
+- Webhook setup/signature docs: [docs/webhooks.md](docs/webhooks.md)
+- Event map + listener examples: [docs/webhook-events.md](docs/webhook-events.md)
+
+## Queueing Strategy
+
+API calls are synchronous by design. Queueing/retries should be controlled by the consuming app.
+
+Recommended patterns and sample job:
+
+- [docs/queueing.md](docs/queueing.md)
+
+## Testing
+
+Facade fake helpers are included:
 
 ```php
-use Illuminate\Support\Facades\Mail;
+use Muensmedia\HyvorRelay\Facades\HyvorRelay;
 
-Mail::mailer('hyvor')
-    ->to('user@example.com')
-    ->send(new \App\Mail\WelcomeMail());
+HyvorRelay::fake()->setResponse('verifyWebhookSignature', true);
+HyvorRelay::verifyWebhookSignature('{}', 'sig');
+HyvorRelay::assertCalled('verifyWebhookSignature');
 ```
 
-### Idempotency (recommended for retries)
+## Contributing
 
-Hyvor Relay supports idempotency via the `X-Idempotency-Key` HTTP header. When you retry a send request with the same key, Relay can short-circuit and return the original response instead of queueing a duplicate email.
+For local development (Docker and non-Docker), commit schema, tests, and linting commands, see:
 
-In Laravel you can set this header on the underlying Symfony message:
+- [CONTRIBUTING.md](CONTRIBUTING.md)
 
-```php
-Mail::to('user@example.com')->send(
-    (new \App\Mail\WelcomeMail())
-        ->withSymfonyMessage(function (\Symfony\Component\Mime\Email $message) use ($userId) {
-            $message->getHeaders()->addTextHeader('X-Idempotency-Key', "welcome-email-{$userId}");
-        })
-);
-```
+## License
 
-## Local development (this repo)
-
-This repository includes a minimal Docker setup (PHP 8.5 container).
-
-Requirements:
-
-- Docker + Docker Compose
-
-Setup:
-
-```bash
-cp .env.example .env
-docker compose up -d
-docker compose exec php composer install
-```
-
-Run tests:
-
-```bash
-docker compose exec php php ./vendor/bin/pest
-docker compose exec php php ./vendor/bin/pest --compact --profile
-```
-
-Run Pint (code style):
-
-```bash
-docker compose exec php php ./vendor/bin/pint
-```
-
-Check formatting only (used in CI, no changes will be applied):
-
-```bash
-docker compose exec php php ./vendor/bin/pint --test
-```
-
-Optional coverage (requires Xdebug or PCOV inside the PHP runtime):
-
-```bash
-docker compose exec php php ./vendor/bin/pest --coverage --configuration phpunit.coverage.xml.dist
-```
-
-## Troubleshooting
-
-`UnsupportedSchemeException`:
-
-- Ensure your mailer uses `transport => 'hyvor-relay'`.
-
-401/403 from Relay:
-
-- Check `HYVOR_RELAY_API_KEY`.
-
-Connection issues:
-
-- Check `HYVOR_RELAY_ENDPOINT` and that your app can reach it (DNS, firewall, TLS).
+MIT
