@@ -1,6 +1,12 @@
-# Hyvor Relay for Laravel
+<div align="center">
+<img src="./docs/relay.svg" width="200"  alt="Relay Logo"/>
 
-A full Laravel integration for Hyvor Relay. This package gives you:
+# Hyvor Relay Laravel Integration<br/>A full Laravel integration for [Hyvor Relay](https://relay.hyvor.com/).
+
+</div>
+
+
+This package gives you:
 
 - `hyvor-relay` mail transport driver
 - typed Console API client via `HyvorRelay` service + facade
