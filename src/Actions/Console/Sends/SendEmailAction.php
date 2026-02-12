@@ -22,7 +22,13 @@ class SendEmailAction
         }
 
         return SendEmailResponseData::from(
-            $this->request('POST', 'sends', json: $payload, headers: $headers)
+            $this->request(
+                'POST',
+                'sends',
+                json: $payload,
+                headers: $headers,
+                apiKeyConfig: 'hyvor-relay.api_keys.send'
+            )
         );
     }
 }

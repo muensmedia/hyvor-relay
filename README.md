@@ -7,7 +7,7 @@ __[TOC]__
 ## What you get
 
 - A Laravel mail transport driver: `hyvor-relay`
-- Simple `.env` configuration (`HYVOR_RELAY_API_KEY`, `HYVOR_RELAY_ENDPOINT`)
+- Environment variable reference: [docs/environment.md](docs/environment.md)
 - Set Hyvor Relay as the default mailer, or keep your default (SMTP, SES, etc.) and use Hyvor only for specific emails
 - Webhook event reference + Laravel listener examples: [docs/webhook-events.md](docs/webhook-events.md)
 - Queue/retry best practices for Console API usage: [docs/queueing.md](docs/queueing.md)
@@ -32,17 +32,7 @@ php artisan vendor:publish --tag=hyvor-relay-config
 
 ## Configuration
 
-Set the API key and endpoint in your Laravel app `.env`:
-
-```dotenv
-HYVOR_RELAY_API_KEY="your-api-key"
-HYVOR_RELAY_ENDPOINT="https://relay.hyvor.com"
-```
-
-Notes:
-
-- `HYVOR_RELAY_ENDPOINT` must be the base URL (no trailing `/api/...` path). The transport will call `POST {endpoint}/api/console/sends`.
-- For a self-hosted Relay instance, set `HYVOR_RELAY_ENDPOINT` to your server URL.
+See [docs/environment.md](docs/environment.md) for all required and optional `.env` variables.
 
 ## Usage
 

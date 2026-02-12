@@ -16,7 +16,7 @@ class GetSendByUuidAction
     public function handle(string $uuid): SendData
     {
         return SendData::from(
-            $this->request('GET', "sends/uuid/{$uuid}")
+            $this->request('GET', "sends/uuid/{$uuid}", apiKeyConfig: 'hyvor-relay.api_keys.send')
         );
     }
 }

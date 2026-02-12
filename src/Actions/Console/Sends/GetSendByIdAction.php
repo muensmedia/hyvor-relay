@@ -16,7 +16,7 @@ class GetSendByIdAction
     public function handle(int $id): SendData
     {
         return SendData::from(
-            $this->request('GET', "sends/{$id}")
+            $this->request('GET', "sends/{$id}", apiKeyConfig: 'hyvor-relay.api_keys.send')
         );
     }
 }

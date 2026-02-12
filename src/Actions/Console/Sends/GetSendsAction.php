@@ -17,7 +17,7 @@ class GetSendsAction
     public function handle(array $query = []): DataCollection
     {
         return SendData::collect(
-            $this->request('GET', 'sends', query: $query),
+            $this->request('GET', 'sends', query: $query, apiKeyConfig: 'hyvor-relay.api_keys.send'),
             DataCollection::class
         );
     }

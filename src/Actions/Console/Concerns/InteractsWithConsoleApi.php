@@ -12,13 +12,14 @@ trait InteractsWithConsoleApi
         string $uri,
         array $query = [],
         array $json = [],
-        array $headers = []
+        array $headers = [],
+        string $apiKeyConfig = 'hyvor-relay.api_keys.general'
     ): array {
         $normalizedMethod = strtoupper($method);
         $normalizedUri = ltrim($uri, '/');
 
         $response = HyvorRelayHttp::baseUrl(rtrim((string) config('hyvor-relay.endpoint'), '/').'/api/console')
-            ->withToken((string) config('hyvor-relay.api_key'))
+            ->withToken((string) config($apiKeyConfig, config('hyvor-relay.api_key')))
             ->connectTimeout((int) config('hyvor-relay.connect_timeout', 5))
             ->withHeaders($headers)
             ->send($normalizedMethod, $normalizedUri, [
