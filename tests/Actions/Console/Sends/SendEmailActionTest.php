@@ -30,7 +30,7 @@ it('sends request via action with idempotency header', function () {
         ->and($capturedRequest)->not->toBeNull()
         ->and($capturedRequest->method())->toBe('POST')
         ->and($capturedRequest->url())
-        ->toBe(rtrim((string)config('hyvor-relay.endpoint'), '/') . '/api/console/sends')
+        ->toBe(rtrim((string) config('hyvor-relay.endpoint'), '/').'/api/console/sends')
         ->and($capturedRequest->header('X-Idempotency-Key')[0])->toBe('welcome-7')
         ->and($capturedRequest['subject'])->toBe('Hello');
 
