@@ -23,4 +23,29 @@ return [
      * - POST {endpoint}/api/console/sends
      */
     'endpoint' => env('HYVOR_RELAY_ENDPOINT', 'https://relay.hyvor.com'),
+
+    /**
+     * Secret for validating incoming webhook signatures.
+     *
+     * @see https://relay.hyvor.com/docs/webhooks#validating-webhooks
+     *
+     * Relay signs the raw JSON body as HMAC-SHA256 and sends it in the X-Signature header.
+     */
+    'webhook_secret' => env('HYVOR_RELAY_WEBHOOK_SECRET'),
+
+    /**
+     * Static token expected as query parameter on webhook URLs.
+     *
+     * Example:
+     * - https://your-app.test/api/hyvor-relay/v1/webhook?token=...
+     *
+     * Generate a token:
+     * - php -r "echo bin2hex(random_bytes(32)).PHP_EOL;"
+     */
+    'webhook_token' => env('HYVOR_RELAY_WEBHOOK_TOKEN'),
+
+    /**
+     * Query parameter name used to transmit the webhook token.
+     */
+    'webhook_token_query_parameter' => env('HYVOR_RELAY_WEBHOOK_TOKEN_QUERY_PARAMETER', 'token'),
 ];
