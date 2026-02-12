@@ -31,9 +31,8 @@ class WebhookController
         $type = EventTypes::tryFrom((string) $request->json('event'));
         $payload = (array) $request->json('payload', []);
 
-        if ($type === null) {
+        if ($type === null)
             return response()->json(status: 204);
-        }
 
         match ($type) {
             EventTypes::SEND_RECIPIENT_ACCEPTED => SendRecipientAcceptedReceived::dispatch(
