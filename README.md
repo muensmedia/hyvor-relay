@@ -10,7 +10,6 @@ This package gives you:
 
 - `hyvor-relay` mail transport driver
 - typed Console API client via `HyvorRelay` service + facade
-- Laravel Actions for all Console API endpoints
 - DTO-based responses and webhook payloads via `spatie/laravel-data`
 - webhook route + signature validation middleware
 - one Laravel event per Hyvor webhook event
@@ -83,6 +82,8 @@ If optional keys are not set, they fallback to `HYVOR_RELAY_API_KEY_GENERAL`.
 Then send as usual with Laravel Mail.
 
 ## Console API Usage (Facade)
+
+Use the facade as the package's public API. Actions are internal implementation details.
 
 ```php
 use Muensmedia\HyvorRelay\Facades\HyvorRelay;
