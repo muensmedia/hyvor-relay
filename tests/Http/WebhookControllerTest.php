@@ -50,3 +50,43 @@ it('rejects webhook requests with invalid signature', function () {
 
     $response->assertUnauthorized();
 });
+
+it('rejects webhook requests with missing signature header', function () {
+    $response = $this->postJson('/api/hyvor-relay/v1/webhook', [
+        'event' => EventTypes::SEND_RECIPIENT_ACCEPTED->value,
+        'payload' => [],
+    ]);
+
+    $response->assertUnauthorized();
+});
+
+it('accepts webhook requests with a valid sha256 prefixed signature', function () {
+    Event::fake();
+
+    $body = MockWebhooks::accepted();
+    $json = json_encode($body, JSON_THROW_ON_ERROR);
+    $signature = hash_hmac('sha256', $json, (string) config('hyvor-relay.webhook_secret'));
+
+    $response = test()->call('POST', '/api/hyvor-relay/v1/webhook', [], [], [], [
+        'CONTENT_TYPE' => 'application/json',
+        'HTTP_X_SIGNATURE' => 'sha256='.$signature,
+    ], $json);
+
+    $response->assertNoContent();
+    Event::assertDispatched(SendRecipientAcceptedReceived::class);
+});
+
+it('returns server error when webhook secret is missing', function () {
+    config()->set('hyvor-relay.webhook_secret', null);
+
+    $response = $this
+        ->withHeaders([
+            'X-Signature' => 'whatever',
+        ])
+        ->postJson('/api/hyvor-relay/v1/webhook', [
+            'event' => EventTypes::SEND_RECIPIENT_ACCEPTED->value,
+            'payload' => [],
+        ]);
+
+    $response->assertStatus(500);
+});
